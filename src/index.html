@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--Thanks to @gameroman for contributing this template-->
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Merge: Crafting Game Template v2</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+    :root {
+      --background-color: #f0f0f0;
+      --text-color: #000000;
+      --resizer-color: #cccccc;
+      --close-button-border-color: #000000;
+      --recipe-background-color: #f0f0f0;
+      /* sizes */
+      --sidebar-width: 300px;
+      --min-sidebar-width: 125px;
+      --max-sidebar-width: 900px;
+      --resizer-width: 10px;
+      --element-border-radius: 5px;
+      --element-padding: 9px 10px 8px;
+      --element-font-size: 17px;
+      --element-emoji-font-size: 17px;
+      --element-emoji-margin-right: 8px;
+      --popup-max-width: 400px;
+      --popup-max-height: 80vh;
+      --popup-title-font-size: 24px;
+      --popup-emoji-font-size: 28px;
+      --popup-emoji-margin-right: 10px;
+      --close-button-size: 30px;
+      --close-button-img-size: 20px;
+      --recipe-font-size: 16px;
+      --recipe-emoji-font-size: 20px;
+      --recipe-emoji-margin-right: 5px;
+      --switch-width: 60px;
+      --switch-height: 34px;
+      --switch-slider-size: 26px;
+      --sidebar-items-gap: 4px;
+      --sidebar-items-margin: 4px;
+      --merging-animation-duration: 1s;
+      --popup-padding: 20px;
+      --popup-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      --popup-border-radius: 5px;
+      --recipe-padding: 10px;
+      --recipe-margin-bottom: 10px;
+      --recipe-border-radius: 5px;
+      --overlay-background-color: rgba(0, 0, 0, 0.5);
+      --element-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      --sidebar-header-font-size: 18px;
+      --sidebar-header-padding-bottom: 10px;
+      --sidebar-header-margin-bottom: 10px;
+      --settings-button-font-size: 20px;
+      --body-font-size: 16px;
+      --body-height: 100vh;
+      --game-container-width: 100%;
+      --game-container-height: 100%;
+      --sidebar-padding: 10px;
+      --sidebar-border-left-width: 2px;
+      --combinations-header-margin-bottom: 15px;
+      --close-button-transition: transform 0.1s ease-in-out;
+      --close-button-hover-scale: 1.06;
+      --crafts-container-max-height: 60vh;
+      --dark-mode-toggle-margin-top: 20px;
+      --slider-background-color: #ccc;
+      --slider-transition: .4s;
+      --slider-border-radius: 34px;
+      --slider-before-left: 4px;
+      --slider-before-bottom: 4px;
+      --slider-before-background-color: white;
+      --slider-before-transition: .4s;
+      --slider-before-border-radius: 50%;
+      --slider-checked-background-color: #2196F3;
+      --slider-checked-transform: translateX(26px);
+      --element-hover-gradient: linear-gradient(180deg, #fff, #d6fcff 80%);
+    }
+
+    .dark-mode {
+      --background-color: #18181b;
+      --text-color: #fff;
+      --border-color: #525252;
+      --resizer-color: #555;
+      --element-hover-gradient: linear-gradient(180deg, #3c4148, #18181b 80%);
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      font-size: var(--body-font-size);
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: var(--body-height);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #game-container {
+      display: flex;
+      width: var(--game-container-width);
+      height: var(--game-container-height);
+    }
+
+    #board {
+      flex-grow: 1;
+      background-color: var(--background-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #resizer {
+      width: var(--resizer-width);
+      background-color: var(--resizer-color);
+      cursor: ew-resize;
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--background-color);
+      overflow-y: auto;
+    }
+
+    #sidebar-header {
+      font-size: var(--sidebar-header-font-size);
+      display: flex;
+      position: sticky;
+      height: auto;
+      top: 0px;
+      background-color: var(--background-color);
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 9px;
+      border: 0px;
+      border-bottom: 1px;
+      border-style: solid;
+      border-color: var(--border-color);
+      z-index: 1;
+    }
+
+    #settings-button {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: var(--settings-button-font-size);
+    }
+
+    .element {
+      border-radius: var(--element-border-radius);
+      display: inline-flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      cursor: pointer;
+      position: absolute;
+      font-size: var(--element-font-size);
+      text-align: left;
+      box-shadow: var(--element-box-shadow);
+      background-color: var(--background-color);
+      border: 1px solid var(--border-color);
+      padding: var(--element-padding);
+      transition: background 0.3s ease;
+    }
+
+    .element:hover {
+      background: var(--element-hover-gradient);
+    }
+
+    .element:hover .element-text {
+      color: white;
+    }
+
+    .element.merging {
+      cursor: default;
+    }
+
+    #sidebar-items {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: var(--sidebar-items-gap);
+      justify-content: flex-start;
+      padding: 9px;
+    }
+
+    #sidebar-items .element {
+      margin: var(--sidebar-items-margin);
+      position: static;
+      background-color: var(--background-color);
+      user-select: none;
+    }
+
+    .element .emoji {
+      font-size: var(--element-emoji-font-size);
+      margin-right: var(--element-emoji-margin-right);
+    }
+
+    @keyframes merge {
+      0% {
+        transform: scale(1) rotate(0deg);
+      }
+
+      50% {
+        transform: scale(1.2) skew(10deg);
+      }
+
+      100% {
+        transform: scale(1) rotate(360deg);
+      }
+    }
+
+    .merging {
+      animation: merge var(--merging-animation-duration) infinite linear;
+      pointer-events: none;
+    }
+
+    #combinations-popup,
+    #settings-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--background-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--popup-border-radius);
+      padding: var(--popup-padding);
+      box-shadow: var(--popup-box-shadow);
+      z-index: 1001;
+      width: 80%;
+      max-width: var(--popup-max-width);
+      max-height: var(--popup-max-height);
+      overflow-y: auto;
+    }
+
+    #combinations-header,
+    #settings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--combinations-header-margin-bottom);
+    }
+
+    #combinations-title,
+    #settings-title {
+      margin: 0;
+      font-size: var(--popup-title-font-size);
+      display: flex;
+      align-items: center;
+    }
+
+    .display-item-emoji {
+      font-size: var(--popup-emoji-font-size);
+      margin-right: var(--popup-emoji-margin-right);
+    }
+
+    #close-button-container {
+      cursor: pointer;
+      border: 1px solid var(--close-button-border-color);
+      border-radius: var(--element-border-radius);
+      width: var(--close-button-size);
+      height: var(--close-button-size);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #close-button {
+      width: var(--close-button-img-size);
+      height: var(--close-button-img-size);
+      transition: var(--close-button-transition);
+    }
+
+    #close-button-container:hover #close-button {
+      transform: scale(var(--close-button-hover-scale));
+    }
+
+    .crafts-container {
+      max-height: var(--crafts-container-max-height);
+      overflow-y: auto;
+    }
+
+    .recipe {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--recipe-margin-bottom);
+      padding: var(--recipe-padding);
+      background-color: var(--background-color);
+      border-radius: var(--recipe-border-radius);
+    }
+
+    .display-item {
+      display: flex;
+      align-items: center;
+      font-size: var(--recipe-font-size);
+    }
+
+    .display-item-emoji {
+      font-size: var(--recipe-emoji-font-size);
+      margin-right: var(--recipe-emoji-margin-right);
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--overlay-background-color);
+      z-index: 1000;
+      display: none;
+    }
+
+    #dark-mode-toggle {
+      margin-top: var(--dark-mode-toggle-margin-top);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: var(--switch-width);
+      height: var(--switch-height);
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--slider-background-color);
+      transition: var(--slider-transition);
+      border-radius: var(--slider-border-radius);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: var(--switch-slider-size);
+      width: var(--switch-slider-size);
+      left: var(--slider-before-left);
+      bottom: var(--slider-before-bottom);
+      background-color: var(--slider-before-background-color);
+      transition: var(--slider-before-transition);
+      border-radius: var(--slider-before-border-radius);
+    }
+
+    input:checked+.slider {
+      background-color: var(--slider-checked-background-color);
+    }
+
+    input:checked+.slider:before {
+      transform: var(--slider-checked-transform);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="game-container">
+    <div id="board"></div>
+    <div id="resizer"></div>
+    <div id="sidebar">
+      <div id="sidebar-header">
+        <div>
+          <button id="settings-button">⚙️</button>
+        </div>
+      </div>
+      <div id="sidebar-items-content">
+        <div id="sidebar-items-header">
+        </div>
+        <div id="sidebar-items">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="overlay"></div>
+  <script>
+    (function() {
+      document.body.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+      let GG_ALL_GAME_CONFIG = {
+        startingElements: ['Earth', 'Water', 'Wind', 'Fire'], // Initial elements
+        boardSize: { // Size of the main board
+          width: window.innerWidth - 220,
+          height: window.innerHeight
+        },
+        boardBackgroundColor: '#ffffff', // Background color of the board
+        sidebarBackgroundColor: '#ffffff', // Background color of the sidebar
+        sidebarOutlineColor: '#cccccc', // Color of the sidebar outline
+        baseElementEmojis: { // Hardcoded emojis for base elements
+          'Earth': '🌎',
+          'Water': '💧',
+          'Wind': '💨',
+          'Fire': '🔥'
+        },
+        sidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width')), // Initial width of the sidebar
+        minSidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-sidebar-width')), // Minimum width of the sidebar
+        maxSidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-sidebar-width')), // Maximum width of the sidebar
+        settingsButtonEmoji: '⚙️', // Emoji for settings button
+        closeButtonImage: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJhIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj48cGF0aCBkPSJNMzAwLjAwMDAyLDM0OS44MzIzM0w2MC4xMDc4Miw1ODkuNzIzMzJjLTYuNTQ2ODksNi41NDc2OS0xNC43NzY0Myw5Ljg5NzE4LTI0LjY4ODYsMTAuMDQ4NTEtOS45MTEzOCwuMTUyMS0xOC4yOTIyNC0zLjE5NzQtMjUuMTQyNTYtMTAuMDQ4NTFDMy40MjU1Nyw1ODIuODcyOTgsLjAwMDAyLDU3NC41Njc4LDAsNTY0LjgwNzc0Yy4wMDAwMi05Ljc2MDA3LDMuNDI1NTctMTguMDY1MjYsMTAuMjc2NjYtMjQuOTE1NTZsMjM5Ljg5MTAxLTIzOS44OTIyTDEwLjI3NjY4LDYwLjEwNzc4QzMuNzI4OTksNTMuNTYwOTIsLjM3OTUsNDUuMzMxMzYsLjIyODE3LDM1LjQxOTIyLC4wNzYwNywyNS41MDc4OCwzLjQyNTU3LDE3LjEyNywxMC4yNzY2OCwxMC4yNzY2NiwxNy4xMjcwMiwzLjQyNTUzLDI1LjQzMjIsMCwzNS4xOTIyNiwwczE4LjA2NTI2LDMuNDI1NTMsMjQuOTE1NTYsMTAuMjc2NjZsMjM5Ljg5MjIsMjM5Ljg5MDk3TDUzOS44OTIyMiwxMC4yNzY1OWM2LjU0Njg2LTYuNTQ3NzIsMTQuNzc2NDMtOS44OTcyLDI0LjY4ODU2LTEwLjA0ODUxLDkuOTExMzQtLjE1MjE3LDE4LjI5MjIyLDMuMTk3MzgsMjUuMTQyNTYsMTAuMDQ4NTEsNi44NTExMyw2Ljg1MDI3LDEwLjI3NjY2LDE1LjE1NTUyLDEwLjI3NjY2LDI0LjkxNTU2cy0zLjQyNTUzLDE4LjA2NTIyLTEwLjI3NjY2LDI0LjkxNTU2bC0yMzkuODkwOTcsMjM5Ljg5MjI3LDIzOS44OTEwNSwyMzkuODkyMmM2LjU0NzcyLDYuNTQ2ODksOS44OTcyLDE0Ljc3NjQzLDEwLjA0ODUxLDI0LjY4ODYsLjE1MjE3LDkuOTExMzgtMy4xOTczOCwxOC4yOTIyNC0xMC4wNDg1MSwyNS4xNDI1Ni02Ljg1MDI3LDYuODUxMS0xNS4xNTU1MiwxMC4yNzY2NC0yNC45MTU1NiwxMC4yNzY2Ni05Ljc2MDA0LS4wMDAwMi0xOC4wNjUyMi0zLjQyNTU3LTI0LjkxNTU2LTEwLjI3NjY2bC0yMzkuODkyMjctMjM5Ljg5MTAxWiIvPjwvc3ZnPg==',
+        darkMode: false, // Dark mode setting
+      };
+      const gameContainer = document.getElementById('game-container');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarItems = document.getElementById('sidebar-items');
+      const board = document.getElementById('board');
+      const resizer = document.getElementById('resizer');
+      let isResizing = false;
+      let lastDownX = 0;
+
+      function initResize(e) {
+        isResizing = true;
+        lastDownX = e.clientX;
+        document.addEventListener('mousemove', resize, false);
+        document.addEventListener('mouseup', stopResize, false);
+        document.body.style.cursor = 'ew-resize';
+      }
+
+      function resize(e) {
+        if (isResizing) {
+          const offsetRight = gameContainer.offsetWidth - (e.clientX - gameContainer.offsetLeft) - 25;
+          const minWidth = GG_ALL_GAME_CONFIG.minSidebarWidth;
+          const maxWidth = GG_ALL_GAME_CONFIG.maxSidebarWidth;
+          if (offsetRight > minWidth && offsetRight < maxWidth) {
+            sidebar.style.width = `${offsetRight}px`;
+            GG_ALL_GAME_CONFIG.sidebarWidth = offsetRight;
+            GG_ALL_GAME_CONFIG.boardSize.width = gameContainer.offsetWidth - offsetRight;
+          }
+        }
+      }
+
+      function stopResize() {
+        isResizing = false;
+        document.removeEventListener('mousemove', resize, false);
+        document.removeEventListener('mouseup', stopResize, false);
+        document.body.style.cursor = 'default';
+      }
+      resizer.addEventListener('mousedown', initResize, false);
+      let draggedElement = null;
+      let offsetX, offsetY;
+      let gameState = {
+        combinations: {}, // Store tried combinations
+        emojis: {} // Store emojis for elements
+      };
+      // Set the sidebar outline
+      sidebar.style.borderColor = GG_ALL_GAME_CONFIG.sidebarOutlineColor;
+
+      function createElementDiv(name, targetX = 0, targetY = 0) {
+        const element = document.createElement('div');
+        element.className = 'element';
+        element.style.left = `${targetX}px`;
+        element.style.top = `${targetY}px`;
+        element.draggable = true;
+        element.addEventListener('mousedown', dragStart);
+        element.addEventListener('touchstart', dragStart, {
+          passive: false
+        });
+        element.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          showCombinations.call(this, e);
+        });
+        const emojiSpan = document.createElement('span');
+        emojiSpan.className = 'emoji';
+        element.appendChild(emojiSpan);
+        const textSpan = document.createElement('span');
+        textSpan.className = 'element-text';
+        textSpan.textContent = titleCase(name);
+        textSpan.style.color = 'var(--element-text-color)';
+        element.appendChild(textSpan);
+        element.dataset.name = name; // Store the name in a data attribute
+        if (GG_ALL_GAME_CONFIG.baseElementEmojis[name]) {
+          emojiSpan.textContent = GG_ALL_GAME_CONFIG.baseElementEmojis[name];
+          gameState.emojis[name] = GG_ALL_GAME_CONFIG.baseElementEmojis[name];
+        } else if (gameState.emojis[name]) {
+          emojiSpan.textContent = gameState.emojis[name];
+        } else {
+          getEmoji(name).then(emoji => {
+            emojiSpan.textContent = emoji;
+            gameState.emojis[name] = emoji;
+          });
+        }
+        return element;
+      }
+
+      function getEmoji(input) {
+        if (gameState.emojis[input]) {
+          return Promise.resolve(gameState.emojis[input]);
+        }
+        return generateEmoji(input)
+          .then(emoji => {
+            if (emoji) {
+              gameState.emojis[input] = emoji;
+              return emoji;
+            }
+            return '⬜';
+          })
+          .catch(() => {
+            return '⬜';
+          });
+      }
+
+      function generateEmoji(input) {
+        return fetch('https://www.wildwest.gg/api/ai/emoji', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              input
+            }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            const emoji = data.data;
+            return emoji;
+          })
+          .catch(error => {
+            console.error('Error generating emoji:', error);
+            return '⬜'; // Default emoji if generation fails
+          });
+      }
+
+      function addToSidebarItems(name) {
+        const element = createElementDiv(name);
+        sidebarItems.appendChild(element);
+      }
+
+      function dragStart(e) {
+        e.preventDefault(); // Prevent default behavior
+        let target = e.target;
+        while (target && !target.classList.contains('element')) {
+          target = target.parentElement;
+        }
+        if (target && target.classList.contains('element') && !target.classList.contains('merging')) {
+          if ((e.type === 'mousedown' && e.button === 2) || (e.type === 'touchstart' && e.touches.length > 1)) {
+            if (target.parentElement === board) {
+              // Right-click or two-finger touch on board element, delete it
+              board.removeChild(target);
+              return;
+            }
+          }
+          const rect = target.getBoundingClientRect();
+          const targetX = rect.left;
+          const targetY = rect.top;
+          target.style.left = `${targetX}px`;
+          target.style.top = `${targetY}px`;
+          if (target.parentElement === sidebarItems) {
+            draggedElement = createElementDiv(target.dataset.name, targetX, targetY);
+          } else {
+            draggedElement = target;
+          }
+          draggedElement.style.position = 'absolute';
+          draggedElement.style.zIndex = 1000;
+          document.body.appendChild(draggedElement);
+          if (e.type === 'mousedown') {
+            offsetX = e.clientX - targetX;
+            offsetY = e.clientY - targetY;
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', dragEnd);
+          } else if (e.type === 'touchstart') {
+            offsetX = e.touches[0].clientX - targetX;
+            offsetY = e.touches[0].clientY - targetY;
+            document.addEventListener('touchmove', drag, {
+              passive: false
+            });
+            document.addEventListener('touchend', dragEnd);
+          }
+        }
+      }
+
+      function drag(e) {
+        e.preventDefault(); // Prevent scrolling on mobile
+        if (draggedElement) {
+          let clientX, clientY;
+          if (e.type === 'mousemove') {
+            clientX = e.clientX;
+            clientY = e.clientY;
+          } else if (e.type === 'touchmove') {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+          }
+          const x = clientX - offsetX;
+          const y = clientY - offsetY;
+          draggedElement.style.left = `${x}px`;
+          draggedElement.style.top = `${y}px`;
+          draggedElement.style.transform = 'none';
+        }
+      }
+
+      function dragEnd(e) {
+        if (draggedElement && !draggedElement.classList.contains('merging')) {
+          const boardRect = board.getBoundingClientRect();
+          let clientX, clientY;
+          if (e.type === 'mouseup') {
+            clientX = e.clientX;
+            clientY = e.clientY;
+          } else if (e.type === 'touchend') {
+            clientX = e.changedTouches[0].clientX;
+            clientY = e.changedTouches[0].clientY;
+          }
+          const x = clientX - boardRect.left - offsetX;
+          const y = clientY - boardRect.top - offsetY;
+          if (clientX > boardRect.left && clientX < boardRect.right &&
+            clientY > boardRect.top && clientY < boardRect.bottom) {
+            draggedElement.style.left = `${x}px`;
+            draggedElement.style.top = `${y}px`;
+            board.appendChild(draggedElement);
+            // Check for collision with other elements
+            const otherElements = Array.from(board.children).filter(el => el !== draggedElement && !el.classList.contains('merging'));
+            const collidedElement = otherElements.find(el => isColliding(draggedElement, el));
+            if (collidedElement) {
+              mergeElements(draggedElement, collidedElement);
+            }
+          } else {
+            draggedElement.remove();
+          }
+        }
+        draggedElement = null;
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', dragEnd);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('touchend', dragEnd);
+      }
+      // Update board size when window is resized
+      window.addEventListener('resize', () => {
+        GG_ALL_GAME_CONFIG.boardSize.width = gameContainer.offsetWidth - GG_ALL_GAME_CONFIG.sidebarWidth - 10; // 10 for resizer
+        GG_ALL_GAME_CONFIG.boardSize.height = window.innerHeight;
+      });
+
+      function showCombinations(e) {
+        const elementName = this.dataset.name;
+        const combinations = findCombinations(elementName);
+        // Remove existing popup if any
+        const existingPopup = document.getElementById('combinations-popup');
+        if (existingPopup) {
+          existingPopup.remove();
+        }
+        // Create and show the popup
+        const popup = document.createElement('div');
+        popup.innerHTML = `
+<dialog id="combinations-popup" open>
+<div id="combinations-header">
+<h1 id="combinations-title"><span class="display-item-emoji">${gameState.emojis[elementName] || '⬜'}</span> ${elementName}</h1>
+<div id="close-button-container">
+<img src="${GG_ALL_GAME_CONFIG.closeButtonImage}" id="close-button" alt="Close">
+</div>
+</div>
+<div class="crafts-container">
+${combinations.map(combo => `
+<div class="recipe">
+<div class="display-item">
+<span class="display-item-emoji">${gameState.emojis[combo[0]] || '⬜'}</span> ${combo[0]}
+</div>
++
+<div class="display-item">
+<span class="display-item-emoji">${gameState.emojis[combo[1]] || '⬜'}</span> ${combo[1]}
+</div>
+=
+<div class="display-item">
+<span class="display-item-emoji">${gameState.emojis[elementName] || '⬜'}</span> ${elementName}
+</div>
+</div>
+`).join('')}
+</div>
+</dialog>
+`;
+        // Add the popup to the document
+        document.body.appendChild(popup.firstElementChild);
+        const dialog = document.getElementById('combinations-popup');
+        // Show overlay
+        const overlay = document.getElementById('overlay');
+        overlay.style.display = 'block';
+        // Add event listener to close button
+        const closeButton = document.getElementById('close-button-container');
+        closeButton.addEventListener('click', () => {
+          dialog.remove();
+          overlay.style.display = 'none';
+        });
+        // Close the popup when clicking outside
+        document.addEventListener('click', function closePopup(event) {
+          if (!dialog.contains(event.target) && event.target !== e.target) {
+            dialog.remove();
+            overlay.style.display = 'none';
+            document.removeEventListener('click', closePopup);
+          }
+        });
+      }
+
+      function findCombinations(elementName) {
+        const combinations = [];
+        for (const [key, value] of Object.entries(gameState.combinations)) {
+          if (value.toLowerCase() === elementName.toLowerCase()) {
+            combinations.push(key.split('-'));
+          }
+        }
+        return combinations;
+      }
+
+      function isColliding(el1, el2) {
+        const rect1 = el1.getBoundingClientRect();
+        const rect2 = el2.getBoundingClientRect();
+        return !(rect1.right < rect2.left ||
+          rect1.left > rect2.right ||
+          rect1.bottom < rect2.top ||
+          rect1.top > rect2.bottom);
+      }
+
+      function mergeElements(element1, element2) {
+        if (element1.classList.contains('merging') || element2.classList.contains('merging')) {
+          return; // Don't merge if either element is already merging
+        }
+        const name1 = element1.dataset.name;
+        const name2 = element2.dataset.name;
+        const midX = (parseFloat(element1.style.left) + parseFloat(element2.style.left)) / 2;
+        const midY = (parseFloat(element1.style.top) + parseFloat(element2.style.top)) / 2;
+        generateNewElement(name1, name2, midX, midY, element1, element2);
+      }
+
+      function generateNewElement(item1, item2, x, y, element1, element2) {
+        const combinationKey = [item1, item2].sort().join('-');
+        if (gameState.combinations[combinationKey]) {
+          // If combination exists in gameState, use it
+          const newElementName = gameState.combinations[combinationKey];
+          createNewElement(newElementName, x, y);
+          board.removeChild(element1);
+          board.removeChild(element2);
+        } else {
+          // If not, call the API
+          element1.classList.add('merging');
+          element2.classList.add('merging');
+          element1.style.left = `${x}px`;
+          element1.style.top = `${y}px`;
+          element2.style.left = `${x}px`;
+          element2.style.top = `${y}px`;
+          // Ensure items are in alphabetical order
+          const [sortedItem1, sortedItem2] = [item1, item2].sort();
+          fetch('https://www.wildwest.gg/api/ai/merge', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                item1: sortedItem1,
+                item2: sortedItem2
+              }),
+            })
+            .then(response => response.json())
+            .then(data => {
+              const newElement = titleCase(data.data.output);
+              // Generate emoji for the new element
+              return getEmoji(newElement).then(emoji => {
+                return newElement;
+              });
+            })
+            .then(newElement => {
+              setTimeout(() => {
+                createNewElement(newElement, x, y);
+                board.removeChild(element1);
+                board.removeChild(element2);
+                // Store the combination
+                gameState.combinations[combinationKey] = newElement;
+              }, 1000);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert("There was an error merging elements. Please try again.");
+              element1.classList.remove('merging');
+              element2.classList.remove('merging');
+            });
+        }
+      }
+
+      function createNewElement(name, x, y) {
+        const newElement = createElementDiv(name);
+        newElement.style.left = `${x}px`;
+        newElement.style.top = `${y}px`;
+        board.appendChild(newElement);
+        if (!elementExistsInSidebar(name)) {
+          addToSidebarItems(name);
+        }
+      }
+
+      function elementExistsInSidebar(name) {
+        const sidebarElements = sidebar.getElementsByClassName('element');
+        return Array.from(sidebarElements).some(el => el.dataset.name.toLowerCase() === name.toLowerCase());
+      }
+
+      function titleCase(str) {
+        return str.toLowerCase().split(' ').map(function(word) {
+          return word.replace(word[0], word[0].toUpperCase());
+        }).join(' ');
+      }
+
+      function showSettingsPopup() {
+        // Remove existing popup if any
+        const existingPopup = document.getElementById('settings-popup');
+        if (existingPopup) {
+          existingPopup.remove();
+        }
+        // Create and show the popup
+        const popup = document.createElement('div');
+        popup.innerHTML = `
+<dialog id="settings-popup" open>
+<div id="settings-header">
+<h1 id="settings-title">Settings</h1>
+<div id="close-button-container">
+<img src="${GG_ALL_GAME_CONFIG.closeButtonImage}" id="close-button" alt="Close">
+</div>
+</div>
+<div class="settings-container">
+<div id="dark-mode-toggle">
+<label class="switch">
+<input type="checkbox" id="dark-mode-checkbox" ${GG_ALL_GAME_CONFIG.darkMode ? 'checked' : ''}>
+<span class="slider"></span>
+</label>
+<span>Dark Mode</span>
+</div>
+</div>
+</dialog>
+`;
+        // Add the popup to the document
+        document.body.appendChild(popup.firstElementChild);
+        const dialog = document.getElementById('settings-popup');
+        // Show overlay
+        const overlay = document.getElementById('overlay');
+        overlay.style.display = 'block';
+        // Add event listener to close button
+        const closeButton = document.getElementById('close-button-container');
+        closeButton.addEventListener('click', () => {
+          dialog.remove();
+          overlay.style.display = 'none';
+        });
+        // Add event listener to dark mode toggle
+        const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
+        darkModeCheckbox.addEventListener('change', toggleDarkMode);
+        // Close the popup when clicking outside
+        document.addEventListener('click', function closePopup(event) {
+          if (!dialog.contains(event.target) && event.target !== document.getElementById('settings-button')) {
+            dialog.remove();
+            overlay.style.display = 'none';
+            document.removeEventListener('click', closePopup);
+          }
+        });
+      }
+      // Initialize the game
+      GG_ALL_GAME_CONFIG.startingElements.forEach(element => {
+        if (!elementExistsInSidebar(element)) {
+          addToSidebarItems(element);
+        }
+      });
+      // Load dark mode setting from localStorage
+      GG_ALL_GAME_CONFIG.darkMode = localStorage.getItem('darkMode') === 'true';
+      applyDarkMode();
+      // Add event listener for settings button
+      document.getElementById('settings-button').addEventListener('click', showSettingsPopup);
+
+      function applyDarkMode() {
+        if (GG_ALL_GAME_CONFIG.darkMode) {
+          document.body.classList.add('dark-mode');
+        } else {
+          document.body.classList.remove('dark-mode');
+        }
+      }
+
+      function toggleDarkMode() {
+        GG_ALL_GAME_CONFIG.darkMode = !GG_ALL_GAME_CONFIG.darkMode;
+        localStorage.setItem('darkMode', GG_ALL_GAME_CONFIG.darkMode);
+        applyDarkMode();
+      }
+    })();
+  </script>
+
+</body>
+
+</html>

@@ -13,14 +13,14 @@
     :root {
       --background-color: #f0f0f0;
       --text-color: #000000;
-      --resizer-color: #cccccc;
+      --resizer-color: #f0f0f0;
       --close-button-border-color: #000000;
       --recipe-background-color: #f0f0f0;
       /* sizes */
       --sidebar-width: 300px;
       --min-sidebar-width: 125px;
       --max-sidebar-width: 900px;
-      --resizer-width: 10px;
+      --resizer-width: 5px;
       --element-border-radius: 5px;
       --element-padding: 9px 10px 8px;
       --element-font-size: 17px;
@@ -82,7 +82,7 @@
       --background-color: #18181b;
       --text-color: #fff;
       --border-color: #525252;
-      --resizer-color: #555;
+      --resizer-color: #18181b;
       --element-hover-gradient: linear-gradient(180deg, #3c4148, #18181b 80%);
     }
 
@@ -114,11 +114,22 @@
 
     #resizer {
       width: var(--resizer-width);
+      height: 100%;
       background-color: var(--resizer-color);
       cursor: ew-resize;
+      position: absolute;
+      z-index: 10;
+      right: calc(var(--sidebar-width) - var(--resizer-width) / 2 - 0.5px);
     }
 
     #sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      z-index: 10;
+      border-left: 1px solid var(--border-color);
+      contain: strict;
       width: var(--sidebar-width);
       background-color: var(--background-color);
       overflow-y: auto;
@@ -395,9 +406,6 @@
           width: window.innerWidth - 220,
           height: window.innerHeight
         },
-        boardBackgroundColor: '#ffffff', // Background color of the board
-        sidebarBackgroundColor: '#ffffff', // Background color of the sidebar
-        sidebarOutlineColor: '#cccccc', // Color of the sidebar outline
         baseElementEmojis: { // Hardcoded emojis for base elements
           'Earth': '🌎',
           'Water': '💧',
@@ -429,11 +437,11 @@
 
       function resize(e) {
         if (isResizing) {
-          const offsetRight = gameContainer.offsetWidth - (e.clientX - gameContainer.offsetLeft) - 25;
+          const offsetRight = gameContainer.offsetWidth - (e.clientX - gameContainer.offsetLeft);
           const minWidth = GG_ALL_GAME_CONFIG.minSidebarWidth;
           const maxWidth = GG_ALL_GAME_CONFIG.maxSidebarWidth;
           if (offsetRight > minWidth && offsetRight < maxWidth) {
-            sidebar.style.width = `${offsetRight}px`;
+            document.documentElement.style.setProperty('--sidebar-width', `${offsetRight}px`);
             GG_ALL_GAME_CONFIG.sidebarWidth = offsetRight;
             GG_ALL_GAME_CONFIG.boardSize.width = gameContainer.offsetWidth - offsetRight;
           }
@@ -453,8 +461,6 @@
         combinations: {}, // Store tried combinations
         emojis: {} // Store emojis for elements
       };
-      // Set the sidebar outline
-      sidebar.style.borderColor = GG_ALL_GAME_CONFIG.sidebarOutlineColor;
 
       function createElementDiv(name, targetX = 0, targetY = 0) {
         const element = document.createElement('div');

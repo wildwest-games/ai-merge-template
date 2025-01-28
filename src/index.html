@@ -13,14 +13,17 @@
     :root {
       --background-color: #f0f0f0;
       --text-color: #000000;
+      --border-color: #525252;
       --resizer-color: #f0f0f0;
       --close-button-border-color: #000000;
       --recipe-background-color: #f0f0f0;
       /* sizes */
+      --font-size: 16.4px;
+      /* -- */
       --sidebar-width: 300px;
       --min-sidebar-width: 125px;
       --max-sidebar-width: 900px;
-      --resizer-width: 5px;
+      --resizer-width: 7px;
       --element-border-radius: 5px;
       --element-padding: 9px 10px 8px;
       --element-font-size: 17px;
@@ -48,7 +51,6 @@
       --recipe-padding: 10px;
       --recipe-margin-bottom: 10px;
       --recipe-border-radius: 5px;
-      --overlay-background-color: rgba(0, 0, 0, 0.5);
       --element-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       --sidebar-header-font-size: 18px;
       --sidebar-header-padding-bottom: 10px;
@@ -115,10 +117,9 @@
     #resizer {
       width: var(--resizer-width);
       height: 100%;
-      background-color: var(--resizer-color);
       cursor: ew-resize;
       position: absolute;
-      z-index: 10;
+      z-index: 11;
       right: calc(var(--sidebar-width) - var(--resizer-width) / 2 - 0.5px);
     }
 
@@ -136,6 +137,7 @@
     }
 
     #sidebar-header {
+      justify-content: space-between;
       font-size: var(--sidebar-header-font-size);
       display: flex;
       position: sticky;
@@ -153,11 +155,23 @@
       z-index: 1;
     }
 
+    #settings-button-div {
+      display: flex;
+      margin: 4px;
+      height: 40px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+    }
+
     #settings-button {
+      height: 40px;
+      padding: 8px 8px 7px;
       cursor: pointer;
-      background: none;
-      border: none;
-      font-size: var(--settings-button-font-size);
+      opacity: .8;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+      aspect-ratio: 1 / 1;
     }
 
     .element {
@@ -260,6 +274,12 @@
       font-size: var(--popup-title-font-size);
       display: flex;
       align-items: center;
+      color: var(--text-color);
+    }
+
+    .settings-label {
+      font-size: var(--font-size);
+      color: var(--text-color);
     }
 
     .display-item-emoji {
@@ -269,7 +289,7 @@
 
     #close-button-container {
       cursor: pointer;
-      border: 1px solid var(--close-button-border-color);
+      border: 1px solid var(--border-color);
       border-radius: var(--element-border-radius);
       width: var(--close-button-size);
       height: var(--close-button-size);
@@ -314,18 +334,9 @@
       margin-right: var(--recipe-emoji-margin-right);
     }
 
-    #overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: var(--overlay-background-color);
-      z-index: 1000;
-      display: none;
-    }
-
     #dark-mode-toggle {
+      display: inline-flex;
+      gap: 10px;
       margin-top: var(--dark-mode-toggle-margin-top);
     }
 
@@ -381,280 +392,284 @@
     <div id="board"></div>
     <div id="resizer"></div>
     <div id="sidebar">
-      <div id="sidebar-header">
-        <div>
-          <button id="settings-button">⚙️</button>
+      <div>
+        <div id="sidebar-header">
+          <div></div>
+          <div id="settings-button-div">
+            <button id="settings-button">
+              <svg id="settings-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="24" height="24">
+                <path d="M244.66614,599.99994c-6.62389,0-12.35028-2.24361-17.17916-6.73083-4.82887-4.48722-7.79889-10.04277-8.90999-16.66666l-9.35916-73.01248c-10.6411-3.20499-22.14749-8.24777-34.51917-15.12832-12.37167-6.88057-22.8953-14.25222-31.57084-22.11499l-66.73082,28.7175c-6.49555,2.90613-12.88443,3.21611-19.16666,.93-6.28167-2.28667-11.2175-6.40001-14.8075-12.34001L3.83286,416.5383c-3.16222-5.93999-4.12361-12.22193-2.88417-18.84582,1.23889-6.62389,4.55083-12.00861,9.93584-16.15417l58.01249-43.65417c-.98278-6.02557-1.79473-12.23279-2.43584-18.62167-.64111-6.38888-.96167-12.5961-.96167-18.62167,0-5.59832,.32056-11.48501,.96167-17.65999,.64111-6.175,1.45306-13.13001,2.43584-20.86499L10.88453,218.46164c-5.38499-4.14551-8.80388-9.53023-10.25666-16.15417-1.45278-6.62389-.38445-12.90583,3.20499-18.84582L42.42286,117.62831c3.59-5.94055,8.41916-10.05386,14.48749-12.33998,6.06834-2.28668,12.35028-1.97698,18.84584,.92916l66.73084,28.07749c9.95722-8.29056,20.72639-15.76914,32.30751-22.43581,11.58109-6.66667,22.84195-11.8164,33.7825-15.44917l10-73.01248c1.11112-6.62384,4.08112-12.17941,8.90999-16.66666,4.8289-4.4872,10.55527-6.73085,17.17913-6.73085h76.92331c6.62445,0,12.45778,2.24365,17.5,6.73085,5.04277,4.48725,8.11976,10.04283,9.23085,16.66666l9.35918,73.65335c12.77776,4.4872,24.07053,9.63694,33.87832,15.44917,9.80774,5.81167,19.90387,13.07668,30.28834,21.79499l69.29499-28.07749c6.49556-2.90614,12.77751-3.3228,18.84582-1.25,6.06832,2.0728,10.89752,6.07915,14.48751,12.01914l38.58998,66.47501c3.58948,5.93999,4.6578,12.22193,3.20501,18.84582-1.45279,6.62389-4.87162,12.00861-10.25665,16.15417l-60.57667,45.57668c1.83777,6.88054,2.86331,13.19471,3.07668,18.94249,.21388,5.74778,.32089,11.42085,.32084,17.01917,.00005,5.17113-.21357,10.63057-.64082,16.37832-.42781,5.74778-1.41088,12.70276-2.94917,20.86499l59.29499,44.29499c5.38442,4.14556,8.80335,9.53028,10.25665,16.15417,1.45279,6.62389,.38442,12.90583-3.20501,18.84582l-38.58998,66.92334c-3.58999,5.94-8.55804,9.9786-14.90417,12.11583-6.34608,2.13665-12.76698,1.75195-19.26249-1.15416l-66.9875-28.71832c-10.38447,8.71834-20.83308,16.19692-31.34582,22.43583-10.51275,6.23945-21.45304,11.17556-32.82084,14.80834l-9.35918,73.65333c-1.11109,6.62389-4.18808,12.17944-9.23085,16.66666-5.04222,4.48722-10.87555,6.73084-17.5,6.73083l-76.92331-.00006Zm5.44917-33.33333h65.19251l12.30748-90.25667c16.79499-4.44445,31.91248-10.54471,45.35247-18.30083,13.43999-7.75668,27.1258-18.38694,41.05748-31.89084l83.14167,35.44835,33.14081-56.66666-72.94916-54.80748c2.77781-9.48723,4.61558-18.21581,5.51336-26.18583,.89717-7.97,1.34588-15.97221,1.34583-24.00668,.00005-8.46163-.44866-16.4639-1.34583-24.00668-.89778-7.54275-2.73554-15.84389-5.51336-24.90333l74.23085-56.08998-33.14081-56.66666-85.06418,35.64081c-10.08555-11.06832-23.34416-21.44221-39.77584-31.12167-16.43168-9.67946-31.97642-16.10031-46.63416-19.26249l-10.19246-90.25664h-66.47414l-10.385,89.61501c-16.79499,3.58999-32.23304,9.36996-46.31416,17.33998-14.08111,7.96997-28.08749,18.92085-42.01917,32.85247l-83.14083-34.80748-33.14083,56.66666,72.30749,53.97415c-2.77779,7.47889-4.72221,15.5986-5.83333,24.35918-1.11112,8.76058-1.66667,17.86306-1.66667,27.30751,0,8.46166,.55555,16.85915,1.66667,25.19249,1.11112,8.33333,2.84192,16.45304,5.19249,24.35915l-71.66666,54.8075,33.14084,56.66666,82.49999-35c13.07665,13.20501,26.6558,23.79249,40.7375,31.76249,14.08111,7.97055,29.94639,14.17803,47.59582,18.62249l10.83333,89.61501Zm32.43583-183.33331c23.24775,0,42.94863-8.07696,59.1025-24.23083,16.15392-16.15389,24.23085-35.85472,24.23085-59.1025s-8.07693-42.9486-24.23085-59.10247c-16.15387-16.15392-35.85474-24.23085-59.1025-24.23085-23.37611,0-43.10915,8.07693-59.19916,24.23085-16.08945,16.15392-24.13416,35.85472-24.13416,59.1025s8.04471,42.9486,24.13416,59.1025c16.09001,16.15389,35.82306,24.2308,59.19916,24.2308Z"></path>
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
-      <div id="sidebar-items-content">
-        <div id="sidebar-items-header">
-        </div>
-        <div id="sidebar-items">
+        <div id="sidebar-items-content">
+          <div id="sidebar-items-header">
+          </div>
+          <div id="sidebar-items">
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div id="overlay"></div>
-  <script>
-    (function() {
-      document.body.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-      });
-      let GG_ALL_GAME_CONFIG = {
-        startingElements: ['Earth', 'Water', 'Wind', 'Fire'], // Initial elements
-        boardSize: { // Size of the main board
-          width: window.innerWidth - 220,
-          height: window.innerHeight
-        },
-        baseElementEmojis: { // Hardcoded emojis for base elements
-          'Earth': '🌎',
-          'Water': '💧',
-          'Wind': '💨',
-          'Fire': '🔥'
-        },
-        sidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width')), // Initial width of the sidebar
-        minSidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-sidebar-width')), // Minimum width of the sidebar
-        maxSidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-sidebar-width')), // Maximum width of the sidebar
-        settingsButtonEmoji: '⚙️', // Emoji for settings button
-        closeButtonImage: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJhIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj48cGF0aCBkPSJNMzAwLjAwMDAyLDM0OS44MzIzM0w2MC4xMDc4Miw1ODkuNzIzMzJjLTYuNTQ2ODksNi41NDc2OS0xNC43NzY0Myw5Ljg5NzE4LTI0LjY4ODYsMTAuMDQ4NTEtOS45MTEzOCwuMTUyMS0xOC4yOTIyNC0zLjE5NzQtMjUuMTQyNTYtMTAuMDQ4NTFDMy40MjU1Nyw1ODIuODcyOTgsLjAwMDAyLDU3NC41Njc4LDAsNTY0LjgwNzc0Yy4wMDAwMi05Ljc2MDA3LDMuNDI1NTctMTguMDY1MjYsMTAuMjc2NjYtMjQuOTE1NTZsMjM5Ljg5MTAxLTIzOS44OTIyTDEwLjI3NjY4LDYwLjEwNzc4QzMuNzI4OTksNTMuNTYwOTIsLjM3OTUsNDUuMzMxMzYsLjIyODE3LDM1LjQxOTIyLC4wNzYwNywyNS41MDc4OCwzLjQyNTU3LDE3LjEyNywxMC4yNzY2OCwxMC4yNzY2NiwxNy4xMjcwMiwzLjQyNTUzLDI1LjQzMjIsMCwzNS4xOTIyNiwwczE4LjA2NTI2LDMuNDI1NTMsMjQuOTE1NTYsMTAuMjc2NjZsMjM5Ljg5MjIsMjM5Ljg5MDk3TDUzOS44OTIyMiwxMC4yNzY1OWM2LjU0Njg2LTYuNTQ3NzIsMTQuNzc2NDMtOS44OTcyLDI0LjY4ODU2LTEwLjA0ODUxLDkuOTExMzQtLjE1MjE3LDE4LjI5MjIyLDMuMTk3MzgsMjUuMTQyNTYsMTAuMDQ4NTEsNi44NTExMyw2Ljg1MDI3LDEwLjI3NjY2LDE1LjE1NTUyLDEwLjI3NjY2LDI0LjkxNTU2cy0zLjQyNTUzLDE4LjA2NTIyLTEwLjI3NjY2LDI0LjkxNTU2bC0yMzkuODkwOTcsMjM5Ljg5MjI3LDIzOS44OTEwNSwyMzkuODkyMmM2LjU0NzcyLDYuNTQ2ODksOS44OTcyLDE0Ljc3NjQzLDEwLjA0ODUxLDI0LjY4ODYsLjE1MjE3LDkuOTExMzgtMy4xOTczOCwxOC4yOTIyNC0xMC4wNDg1MSwyNS4xNDI1Ni02Ljg1MDI3LDYuODUxMS0xNS4xNTU1MiwxMC4yNzY2NC0yNC45MTU1NiwxMC4yNzY2Ni05Ljc2MDA0LS4wMDAwMi0xOC4wNjUyMi0zLjQyNTU3LTI0LjkxNTU2LTEwLjI3NjY2bC0yMzkuODkyMjctMjM5Ljg5MTAxWiIvPjwvc3ZnPg==',
-        darkMode: false, // Dark mode setting
-      };
-      const gameContainer = document.getElementById('game-container');
-      const sidebar = document.getElementById('sidebar');
-      const sidebarItems = document.getElementById('sidebar-items');
-      const board = document.getElementById('board');
-      const resizer = document.getElementById('resizer');
-      let isResizing = false;
-      let lastDownX = 0;
-
-      function initResize(e) {
-        isResizing = true;
-        lastDownX = e.clientX;
-        document.addEventListener('mousemove', resize, false);
-        document.addEventListener('mouseup', stopResize, false);
-        document.body.style.cursor = 'ew-resize';
-      }
-
-      function resize(e) {
-        if (isResizing) {
-          const offsetRight = gameContainer.offsetWidth - (e.clientX - gameContainer.offsetLeft);
-          const minWidth = GG_ALL_GAME_CONFIG.minSidebarWidth;
-          const maxWidth = GG_ALL_GAME_CONFIG.maxSidebarWidth;
-          if (offsetRight > minWidth && offsetRight < maxWidth) {
-            document.documentElement.style.setProperty('--sidebar-width', `${offsetRight}px`);
-            GG_ALL_GAME_CONFIG.sidebarWidth = offsetRight;
-            GG_ALL_GAME_CONFIG.boardSize.width = gameContainer.offsetWidth - offsetRight;
-          }
-        }
-      }
-
-      function stopResize() {
-        isResizing = false;
-        document.removeEventListener('mousemove', resize, false);
-        document.removeEventListener('mouseup', stopResize, false);
-        document.body.style.cursor = 'default';
-      }
-      resizer.addEventListener('mousedown', initResize, false);
-      let draggedElement = null;
-      let offsetX, offsetY;
-      let gameState = {
-        combinations: {}, // Store tried combinations
-        emojis: {} // Store emojis for elements
-      };
-
-      function createElementDiv(name, targetX = 0, targetY = 0) {
-        const element = document.createElement('div');
-        element.className = 'element';
-        element.style.left = `${targetX}px`;
-        element.style.top = `${targetY}px`;
-        element.draggable = true;
-        element.addEventListener('mousedown', dragStart);
-        element.addEventListener('touchstart', dragStart, {
-          passive: false
-        });
-        element.addEventListener('contextmenu', function(e) {
+    <script>
+      (function() {
+        document.body.addEventListener('contextmenu', function(e) {
           e.preventDefault();
-          showCombinations.call(this, e);
         });
-        const emojiSpan = document.createElement('span');
-        emojiSpan.className = 'emoji';
-        element.appendChild(emojiSpan);
-        const textSpan = document.createElement('span');
-        textSpan.className = 'element-text';
-        textSpan.textContent = titleCase(name);
-        textSpan.style.color = 'var(--element-text-color)';
-        element.appendChild(textSpan);
-        element.dataset.name = name; // Store the name in a data attribute
-        if (GG_ALL_GAME_CONFIG.baseElementEmojis[name]) {
-          emojiSpan.textContent = GG_ALL_GAME_CONFIG.baseElementEmojis[name];
-          gameState.emojis[name] = GG_ALL_GAME_CONFIG.baseElementEmojis[name];
-        } else if (gameState.emojis[name]) {
-          emojiSpan.textContent = gameState.emojis[name];
-        } else {
-          getEmoji(name).then(emoji => {
-            emojiSpan.textContent = emoji;
-            gameState.emojis[name] = emoji;
-          });
+        let GG_ALL_GAME_CONFIG = {
+          startingElements: ['Earth', 'Water', 'Wind', 'Fire'], // Initial elements
+          boardSize: { // Size of the main board
+            width: window.innerWidth - 220,
+            height: window.innerHeight
+          },
+          baseElementEmojis: { // Hardcoded emojis for base elements
+            'Earth': '🌎',
+            'Water': '💧',
+            'Wind': '💨',
+            'Fire': '🔥'
+          },
+          sidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width')), // Initial width of the sidebar
+          minSidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-sidebar-width')), // Minimum width of the sidebar
+          maxSidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-sidebar-width')), // Maximum width of the sidebar
+          settingsButtonEmoji: '⚙️', // Emoji for settings button
+          closeButtonImage: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJhIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj48cGF0aCBkPSJNMzAwLjAwMDAyLDM0OS44MzIzM0w2MC4xMDc4Miw1ODkuNzIzMzJjLTYuNTQ2ODksNi41NDc2OS0xNC43NzY0Myw5Ljg5NzE4LTI0LjY4ODYsMTAuMDQ4NTEtOS45MTEzOCwuMTUyMS0xOC4yOTIyNC0zLjE5NzQtMjUuMTQyNTYtMTAuMDQ4NTFDMy40MjU1Nyw1ODIuODcyOTgsLjAwMDAyLDU3NC41Njc4LDAsNTY0LjgwNzc0Yy4wMDAwMi05Ljc2MDA3LDMuNDI1NTctMTguMDY1MjYsMTAuMjc2NjYtMjQuOTE1NTZsMjM5Ljg5MTAxLTIzOS44OTIyTDEwLjI3NjY4LDYwLjEwNzc4QzMuNzI4OTksNTMuNTYwOTIsLjM3OTUsNDUuMzMxMzYsLjIyODE3LDM1LjQxOTIyLC4wNzYwNywyNS41MDc4OCwzLjQyNTU3LDE3LjEyNywxMC4yNzY2OCwxMC4yNzY2NiwxNy4xMjcwMiwzLjQyNTUzLDI1LjQzMjIsMCwzNS4xOTIyNiwwczE4LjA2NTI2LDMuNDI1NTMsMjQuOTE1NTYsMTAuMjc2NjZsMjM5Ljg5MjIsMjM5Ljg5MDk3TDUzOS44OTIyMiwxMC4yNzY1OWM2LjU0Njg2LTYuNTQ3NzIsMTQuNzc2NDMtOS44OTcyLDI0LjY4ODU2LTEwLjA0ODUxLDkuOTExMzQtLjE1MjE3LDE4LjI5MjIyLDMuMTk3MzgsMjUuMTQyNTYsMTAuMDQ4NTEsNi44NTExMyw2Ljg1MDI3LDEwLjI3NjY2LDE1LjE1NTUyLDEwLjI3NjY2LDI0LjkxNTU2cy0zLjQyNTUzLDE4LjA2NTIyLTEwLjI3NjY2LDI0LjkxNTU2bC0yMzkuODkwOTcsMjM5Ljg5MjI3LDIzOS44OTEwNSwyMzkuODkyMmM2LjU0NzcyLDYuNTQ2ODksOS44OTcyLDE0Ljc3NjQzLDEwLjA0ODUxLDI0LjY4ODYsLjE1MjE3LDkuOTExMzgtMy4xOTczOCwxOC4yOTIyNC0xMC4wNDg1MSwyNS4xNDI1Ni02Ljg1MDI3LDYuODUxMS0xNS4xNTU1MiwxMC4yNzY2NC0yNC45MTU1NiwxMC4yNzY2Ni05Ljc2MDA0LS4wMDAwMi0xOC4wNjUyMi0zLjQyNTU3LTI0LjkxNTU2LTEwLjI3NjY2bC0yMzkuODkyMjctMjM5Ljg5MTAxWiIvPjwvc3ZnPg==',
+          darkMode: false, // Dark mode setting
+        };
+        const gameContainer = document.getElementById('game-container');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarItems = document.getElementById('sidebar-items');
+        const board = document.getElementById('board');
+        const resizer = document.getElementById('resizer');
+        let isResizing = false;
+        let lastDownX = 0;
+
+        function initResize(e) {
+          isResizing = true;
+          lastDownX = e.clientX;
+          document.addEventListener('mousemove', resize, false);
+          document.addEventListener('mouseup', stopResize, false);
+          document.body.style.cursor = 'ew-resize';
         }
-        return element;
-      }
 
-      function getEmoji(input) {
-        if (gameState.emojis[input]) {
-          return Promise.resolve(gameState.emojis[input]);
-        }
-        return generateEmoji(input)
-          .then(emoji => {
-            if (emoji) {
-              gameState.emojis[input] = emoji;
-              return emoji;
-            }
-            return '⬜';
-          })
-          .catch(() => {
-            return '⬜';
-          });
-      }
-
-      function generateEmoji(input) {
-        return fetch('https://www.wildwest.gg/api/ai/emoji', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              input
-            }),
-          })
-          .then(response => response.json())
-          .then(data => {
-            const emoji = data.data;
-            return emoji;
-          })
-          .catch(error => {
-            console.error('Error generating emoji:', error);
-            return '⬜'; // Default emoji if generation fails
-          });
-      }
-
-      function addToSidebarItems(name) {
-        const element = createElementDiv(name);
-        sidebarItems.appendChild(element);
-      }
-
-      function dragStart(e) {
-        e.preventDefault(); // Prevent default behavior
-        let target = e.target;
-        while (target && !target.classList.contains('element')) {
-          target = target.parentElement;
-        }
-        if (target && target.classList.contains('element') && !target.classList.contains('merging')) {
-          if ((e.type === 'mousedown' && e.button === 2) || (e.type === 'touchstart' && e.touches.length > 1)) {
-            if (target.parentElement === board) {
-              // Right-click or two-finger touch on board element, delete it
-              board.removeChild(target);
-              return;
+        function resize(e) {
+          if (isResizing) {
+            const offsetRight = gameContainer.offsetWidth - (e.clientX - gameContainer.offsetLeft);
+            const minWidth = GG_ALL_GAME_CONFIG.minSidebarWidth;
+            const maxWidth = GG_ALL_GAME_CONFIG.maxSidebarWidth;
+            if (offsetRight > minWidth && offsetRight < maxWidth) {
+              document.documentElement.style.setProperty('--sidebar-width', `${offsetRight}px`);
+              GG_ALL_GAME_CONFIG.sidebarWidth = offsetRight;
+              GG_ALL_GAME_CONFIG.boardSize.width = gameContainer.offsetWidth - offsetRight;
             }
           }
-          const rect = target.getBoundingClientRect();
-          const targetX = rect.left;
-          const targetY = rect.top;
-          target.style.left = `${targetX}px`;
-          target.style.top = `${targetY}px`;
-          if (target.parentElement === sidebarItems) {
-            draggedElement = createElementDiv(target.dataset.name, targetX, targetY);
+        }
+
+        function stopResize() {
+          isResizing = false;
+          document.removeEventListener('mousemove', resize, false);
+          document.removeEventListener('mouseup', stopResize, false);
+          document.body.style.cursor = 'default';
+        }
+        resizer.addEventListener('mousedown', initResize, false);
+        let draggedElement = null;
+        let offsetX, offsetY;
+        let gameState = {
+          combinations: {}, // Store tried combinations
+          emojis: {} // Store emojis for elements
+        };
+
+        function createElementDiv(name, targetX = 0, targetY = 0) {
+          const element = document.createElement('div');
+          element.className = 'element';
+          element.style.left = `${targetX}px`;
+          element.style.top = `${targetY}px`;
+          element.draggable = true;
+          element.addEventListener('mousedown', dragStart);
+          element.addEventListener('touchstart', dragStart, {
+            passive: false
+          });
+          element.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            showCombinations.call(this, e);
+          });
+          const emojiSpan = document.createElement('span');
+          emojiSpan.className = 'emoji';
+          element.appendChild(emojiSpan);
+          const textSpan = document.createElement('span');
+          textSpan.className = 'element-text';
+          textSpan.textContent = titleCase(name);
+          element.appendChild(textSpan);
+          element.dataset.name = name; // Store the name in a data attribute
+          if (GG_ALL_GAME_CONFIG.baseElementEmojis[name]) {
+            emojiSpan.textContent = GG_ALL_GAME_CONFIG.baseElementEmojis[name];
+            gameState.emojis[name] = GG_ALL_GAME_CONFIG.baseElementEmojis[name];
+          } else if (gameState.emojis[name]) {
+            emojiSpan.textContent = gameState.emojis[name];
           } else {
-            draggedElement = target;
-          }
-          draggedElement.style.position = 'absolute';
-          draggedElement.style.zIndex = 1000;
-          document.body.appendChild(draggedElement);
-          if (e.type === 'mousedown') {
-            offsetX = e.clientX - targetX;
-            offsetY = e.clientY - targetY;
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('mouseup', dragEnd);
-          } else if (e.type === 'touchstart') {
-            offsetX = e.touches[0].clientX - targetX;
-            offsetY = e.touches[0].clientY - targetY;
-            document.addEventListener('touchmove', drag, {
-              passive: false
+            getEmoji(name).then(emoji => {
+              emojiSpan.textContent = emoji;
+              gameState.emojis[name] = emoji;
             });
-            document.addEventListener('touchend', dragEnd);
+          }
+          return element;
+        }
+
+        function getEmoji(input) {
+          if (gameState.emojis[input]) {
+            return Promise.resolve(gameState.emojis[input]);
+          }
+          return generateEmoji(input)
+            .then(emoji => {
+              if (emoji) {
+                gameState.emojis[input] = emoji;
+                return emoji;
+              }
+              return '⬜';
+            })
+            .catch(() => {
+              return '⬜';
+            });
+        }
+
+        function generateEmoji(input) {
+          return fetch('https://www.wildwest.gg/api/ai/emoji', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                input
+              }),
+            })
+            .then(response => response.json())
+            .then(data => {
+              const emoji = data.data;
+              return emoji;
+            })
+            .catch(error => {
+              console.error('Error generating emoji:', error);
+              return '⬜'; // Default emoji if generation fails
+            });
+        }
+
+        function addToSidebarItems(name) {
+          const element = createElementDiv(name);
+          sidebarItems.appendChild(element);
+        }
+
+        function dragStart(e) {
+          e.preventDefault(); // Prevent default behavior
+          let target = e.target;
+          while (target && !target.classList.contains('element')) {
+            target = target.parentElement;
+          }
+          if (target && target.classList.contains('element') && !target.classList.contains('merging')) {
+            if ((e.type === 'mousedown' && e.button === 2) || (e.type === 'touchstart' && e.touches.length > 1)) {
+              if (target.parentElement === board) {
+                // Right-click or two-finger touch on board element, delete it
+                board.removeChild(target);
+                return;
+              }
+            }
+            const rect = target.getBoundingClientRect();
+            const targetX = rect.left;
+            const targetY = rect.top;
+            target.style.left = `${targetX}px`;
+            target.style.top = `${targetY}px`;
+            if (target.parentElement === sidebarItems) {
+              draggedElement = createElementDiv(target.dataset.name, targetX, targetY);
+            } else {
+              draggedElement = target;
+            }
+            draggedElement.style.position = 'absolute';
+            draggedElement.style.zIndex = 1000;
+            document.body.appendChild(draggedElement);
+            if (e.type === 'mousedown') {
+              offsetX = e.clientX - targetX;
+              offsetY = e.clientY - targetY;
+              document.addEventListener('mousemove', drag);
+              document.addEventListener('mouseup', dragEnd);
+            } else if (e.type === 'touchstart') {
+              offsetX = e.touches[0].clientX - targetX;
+              offsetY = e.touches[0].clientY - targetY;
+              document.addEventListener('touchmove', drag, {
+                passive: false
+              });
+              document.addEventListener('touchend', dragEnd);
+            }
           }
         }
-      }
 
-      function drag(e) {
-        e.preventDefault(); // Prevent scrolling on mobile
-        if (draggedElement) {
-          let clientX, clientY;
-          if (e.type === 'mousemove') {
-            clientX = e.clientX;
-            clientY = e.clientY;
-          } else if (e.type === 'touchmove') {
-            clientX = e.touches[0].clientX;
-            clientY = e.touches[0].clientY;
-          }
-          const x = clientX - offsetX;
-          const y = clientY - offsetY;
-          draggedElement.style.left = `${x}px`;
-          draggedElement.style.top = `${y}px`;
-          draggedElement.style.transform = 'none';
-        }
-      }
-
-      function dragEnd(e) {
-        if (draggedElement && !draggedElement.classList.contains('merging')) {
-          const boardRect = board.getBoundingClientRect();
-          let clientX, clientY;
-          if (e.type === 'mouseup') {
-            clientX = e.clientX;
-            clientY = e.clientY;
-          } else if (e.type === 'touchend') {
-            clientX = e.changedTouches[0].clientX;
-            clientY = e.changedTouches[0].clientY;
-          }
-          const x = clientX - boardRect.left - offsetX;
-          const y = clientY - boardRect.top - offsetY;
-          if (clientX > boardRect.left && clientX < boardRect.right &&
-            clientY > boardRect.top && clientY < boardRect.bottom) {
+        function drag(e) {
+          e.preventDefault(); // Prevent scrolling on mobile
+          if (draggedElement) {
+            let clientX, clientY;
+            if (e.type === 'mousemove') {
+              clientX = e.clientX;
+              clientY = e.clientY;
+            } else if (e.type === 'touchmove') {
+              clientX = e.touches[0].clientX;
+              clientY = e.touches[0].clientY;
+            }
+            const x = clientX - offsetX;
+            const y = clientY - offsetY;
             draggedElement.style.left = `${x}px`;
             draggedElement.style.top = `${y}px`;
-            board.appendChild(draggedElement);
-            // Check for collision with other elements
-            const otherElements = Array.from(board.children).filter(el => el !== draggedElement && !el.classList.contains('merging'));
-            const collidedElement = otherElements.find(el => isColliding(draggedElement, el));
-            if (collidedElement) {
-              mergeElements(draggedElement, collidedElement);
-            }
-          } else {
-            draggedElement.remove();
+            draggedElement.style.transform = 'none';
           }
         }
-        draggedElement = null;
-        document.removeEventListener('mousemove', drag);
-        document.removeEventListener('mouseup', dragEnd);
-        document.removeEventListener('touchmove', drag);
-        document.removeEventListener('touchend', dragEnd);
-      }
-      // Update board size when window is resized
-      window.addEventListener('resize', () => {
-        GG_ALL_GAME_CONFIG.boardSize.width = gameContainer.offsetWidth - GG_ALL_GAME_CONFIG.sidebarWidth - 10; // 10 for resizer
-        GG_ALL_GAME_CONFIG.boardSize.height = window.innerHeight;
-      });
 
-      function showCombinations(e) {
-        const elementName = this.dataset.name;
-        const combinations = findCombinations(elementName);
-        // Remove existing popup if any
-        const existingPopup = document.getElementById('combinations-popup');
-        if (existingPopup) {
-          existingPopup.remove();
+        function dragEnd(e) {
+          if (draggedElement && !draggedElement.classList.contains('merging')) {
+            const boardRect = board.getBoundingClientRect();
+            let clientX, clientY;
+            if (e.type === 'mouseup') {
+              clientX = e.clientX;
+              clientY = e.clientY;
+            } else if (e.type === 'touchend') {
+              clientX = e.changedTouches[0].clientX;
+              clientY = e.changedTouches[0].clientY;
+            }
+            const x = clientX - boardRect.left - offsetX;
+            const y = clientY - boardRect.top - offsetY;
+            if (clientX > boardRect.left && clientX < boardRect.right &&
+              clientY > boardRect.top && clientY < boardRect.bottom) {
+              draggedElement.style.left = `${x}px`;
+              draggedElement.style.top = `${y}px`;
+              board.appendChild(draggedElement);
+              // Check for collision with other elements
+              const otherElements = Array.from(board.children).filter(el => el !== draggedElement && !el.classList.contains('merging'));
+              const collidedElement = otherElements.find(el => isColliding(draggedElement, el));
+              if (collidedElement) {
+                mergeElements(draggedElement, collidedElement);
+              }
+            } else {
+              draggedElement.remove();
+            }
+          }
+          draggedElement = null;
+          document.removeEventListener('mousemove', drag);
+          document.removeEventListener('mouseup', dragEnd);
+          document.removeEventListener('touchmove', drag);
+          document.removeEventListener('touchend', dragEnd);
         }
-        // Create and show the popup
-        const popup = document.createElement('div');
-        popup.innerHTML = `
+        // Update board size when window is resized
+        window.addEventListener('resize', () => {
+          GG_ALL_GAME_CONFIG.boardSize.width = gameContainer.offsetWidth - GG_ALL_GAME_CONFIG.sidebarWidth - 10; // 10 for resizer
+          GG_ALL_GAME_CONFIG.boardSize.height = window.innerHeight;
+        });
+
+        function showCombinations(e) {
+          const elementName = this.dataset.name;
+          const combinations = findCombinations(elementName);
+          // Remove existing popup if any
+          const existingPopup = document.getElementById('combinations-popup');
+          if (existingPopup) {
+            existingPopup.remove();
+          }
+          // Create and show the popup
+          const popup = document.createElement('div');
+          popup.innerHTML = `
 <dialog id="combinations-popup" open>
 <div id="combinations-header">
 <h1 id="combinations-title"><span class="display-item-emoji">${gameState.emojis[elementName] || '⬜'}</span> ${elementName}</h1>
@@ -681,142 +696,130 @@ ${combinations.map(combo => `
 </div>
 </dialog>
 `;
-        // Add the popup to the document
-        document.body.appendChild(popup.firstElementChild);
-        const dialog = document.getElementById('combinations-popup');
-        // Show overlay
-        const overlay = document.getElementById('overlay');
-        overlay.style.display = 'block';
-        // Add event listener to close button
-        const closeButton = document.getElementById('close-button-container');
-        closeButton.addEventListener('click', () => {
-          dialog.remove();
-          overlay.style.display = 'none';
-        });
-        // Close the popup when clicking outside
-        document.addEventListener('click', function closePopup(event) {
-          if (!dialog.contains(event.target) && event.target !== e.target) {
+          // Add the popup to the document
+          document.body.appendChild(popup.firstElementChild);
+          const dialog = document.getElementById('combinations-popup');
+          // Add event listener to close button
+          const closeButton = document.getElementById('close-button-container');
+          closeButton.addEventListener('click', () => {
             dialog.remove();
-            overlay.style.display = 'none';
-            document.removeEventListener('click', closePopup);
-          }
-        });
-      }
-
-      function findCombinations(elementName) {
-        const combinations = [];
-        for (const [key, value] of Object.entries(gameState.combinations)) {
-          if (value.toLowerCase() === elementName.toLowerCase()) {
-            combinations.push(key.split('-'));
-          }
+          });
         }
-        return combinations;
-      }
 
-      function isColliding(el1, el2) {
-        const rect1 = el1.getBoundingClientRect();
-        const rect2 = el2.getBoundingClientRect();
-        return !(rect1.right < rect2.left ||
-          rect1.left > rect2.right ||
-          rect1.bottom < rect2.top ||
-          rect1.top > rect2.bottom);
-      }
-
-      function mergeElements(element1, element2) {
-        if (element1.classList.contains('merging') || element2.classList.contains('merging')) {
-          return; // Don't merge if either element is already merging
+        function findCombinations(elementName) {
+          const combinations = [];
+          for (const [key, value] of Object.entries(gameState.combinations)) {
+            if (value.toLowerCase() === elementName.toLowerCase()) {
+              combinations.push(key.split('-'));
+            }
+          }
+          return combinations;
         }
-        const name1 = element1.dataset.name;
-        const name2 = element2.dataset.name;
-        const midX = (parseFloat(element1.style.left) + parseFloat(element2.style.left)) / 2;
-        const midY = (parseFloat(element1.style.top) + parseFloat(element2.style.top)) / 2;
-        generateNewElement(name1, name2, midX, midY, element1, element2);
-      }
 
-      function generateNewElement(item1, item2, x, y, element1, element2) {
-        const combinationKey = [item1, item2].sort().join('-');
-        if (gameState.combinations[combinationKey]) {
-          // If combination exists in gameState, use it
-          const newElementName = gameState.combinations[combinationKey];
-          createNewElement(newElementName, x, y);
-          board.removeChild(element1);
-          board.removeChild(element2);
-        } else {
-          // If not, call the API
-          element1.classList.add('merging');
-          element2.classList.add('merging');
-          element1.style.left = `${x}px`;
-          element1.style.top = `${y}px`;
-          element2.style.left = `${x}px`;
-          element2.style.top = `${y}px`;
-          // Ensure items are in alphabetical order
-          const [sortedItem1, sortedItem2] = [item1, item2].sort();
-          fetch('https://www.wildwest.gg/api/ai/merge', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                item1: sortedItem1,
-                item2: sortedItem2
-              }),
-            })
-            .then(response => response.json())
-            .then(data => {
-              const newElement = titleCase(data.data.output);
-              // Generate emoji for the new element
-              return getEmoji(newElement).then(emoji => {
-                return newElement;
+        function isColliding(el1, el2) {
+          const rect1 = el1.getBoundingClientRect();
+          const rect2 = el2.getBoundingClientRect();
+          return !(rect1.right < rect2.left ||
+            rect1.left > rect2.right ||
+            rect1.bottom < rect2.top ||
+            rect1.top > rect2.bottom);
+        }
+
+        function mergeElements(element1, element2) {
+          if (element1.classList.contains('merging') || element2.classList.contains('merging')) {
+            return; // Don't merge if either element is already merging
+          }
+          const name1 = element1.dataset.name;
+          const name2 = element2.dataset.name;
+          const midX = (parseFloat(element1.style.left) + parseFloat(element2.style.left)) / 2;
+          const midY = (parseFloat(element1.style.top) + parseFloat(element2.style.top)) / 2;
+          generateNewElement(name1, name2, midX, midY, element1, element2);
+        }
+
+        function generateNewElement(item1, item2, x, y, element1, element2) {
+          const combinationKey = [item1, item2].sort().join('-');
+          if (gameState.combinations[combinationKey]) {
+            // If combination exists in gameState, use it
+            const newElementName = gameState.combinations[combinationKey];
+            createNewElement(newElementName, x, y);
+            board.removeChild(element1);
+            board.removeChild(element2);
+          } else {
+            // If not, call the API
+            element1.classList.add('merging');
+            element2.classList.add('merging');
+            element1.style.left = `${x}px`;
+            element1.style.top = `${y}px`;
+            element2.style.left = `${x}px`;
+            element2.style.top = `${y}px`;
+            // Ensure items are in alphabetical order
+            const [sortedItem1, sortedItem2] = [item1, item2].sort();
+            fetch('https://www.wildwest.gg/api/ai/merge', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  item1: sortedItem1,
+                  item2: sortedItem2
+                }),
+              })
+              .then(response => response.json())
+              .then(data => {
+                const newElement = titleCase(data.data.output);
+                // Generate emoji for the new element
+                return getEmoji(newElement).then(emoji => {
+                  return newElement;
+                });
+              })
+              .then(newElement => {
+                setTimeout(() => {
+                  createNewElement(newElement, x, y);
+                  board.removeChild(element1);
+                  board.removeChild(element2);
+                  // Store the combination
+                  gameState.combinations[combinationKey] = newElement;
+                }, 1000);
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert("There was an error merging elements. Please try again.");
+                element1.classList.remove('merging');
+                element2.classList.remove('merging');
               });
-            })
-            .then(newElement => {
-              setTimeout(() => {
-                createNewElement(newElement, x, y);
-                board.removeChild(element1);
-                board.removeChild(element2);
-                // Store the combination
-                gameState.combinations[combinationKey] = newElement;
-              }, 1000);
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              alert("There was an error merging elements. Please try again.");
-              element1.classList.remove('merging');
-              element2.classList.remove('merging');
-            });
+          }
         }
-      }
 
-      function createNewElement(name, x, y) {
-        const newElement = createElementDiv(name);
-        newElement.style.left = `${x}px`;
-        newElement.style.top = `${y}px`;
-        board.appendChild(newElement);
-        if (!elementExistsInSidebar(name)) {
-          addToSidebarItems(name);
+        function createNewElement(name, x, y) {
+          const newElement = createElementDiv(name);
+          newElement.style.left = `${x}px`;
+          newElement.style.top = `${y}px`;
+          board.appendChild(newElement);
+          if (!elementExistsInSidebar(name)) {
+            addToSidebarItems(name);
+          }
         }
-      }
 
-      function elementExistsInSidebar(name) {
-        const sidebarElements = sidebar.getElementsByClassName('element');
-        return Array.from(sidebarElements).some(el => el.dataset.name.toLowerCase() === name.toLowerCase());
-      }
-
-      function titleCase(str) {
-        return str.toLowerCase().split(' ').map(function(word) {
-          return word.replace(word[0], word[0].toUpperCase());
-        }).join(' ');
-      }
-
-      function showSettingsPopup() {
-        // Remove existing popup if any
-        const existingPopup = document.getElementById('settings-popup');
-        if (existingPopup) {
-          existingPopup.remove();
+        function elementExistsInSidebar(name) {
+          const sidebarElements = sidebar.getElementsByClassName('element');
+          return Array.from(sidebarElements).some(el => el.dataset.name.toLowerCase() === name.toLowerCase());
         }
-        // Create and show the popup
-        const popup = document.createElement('div');
-        popup.innerHTML = `
+
+        function titleCase(str) {
+          return str.toLowerCase().split(' ').map(function(word) {
+            return word.replace(word[0], word[0].toUpperCase());
+          }).join(' ');
+        }
+
+        function showSettingsPopup() {
+          // Remove existing popup if any
+          const existingPopup = document.getElementById('settings-popup');
+          if (existingPopup) {
+            existingPopup.remove();
+          }
+          // Create and show the popup
+          const popup = document.createElement('div');
+          popup.innerHTML = `
 <dialog id="settings-popup" open>
 <div id="settings-header">
 <h1 id="settings-title">Settings</h1>
@@ -830,62 +833,53 @@ ${combinations.map(combo => `
 <input type="checkbox" id="dark-mode-checkbox" ${GG_ALL_GAME_CONFIG.darkMode ? 'checked' : ''}>
 <span class="slider"></span>
 </label>
-<span>Dark Mode</span>
+<span class="settings-label">Dark Mode</span>
 </div>
 </div>
 </dialog>
 `;
-        // Add the popup to the document
-        document.body.appendChild(popup.firstElementChild);
-        const dialog = document.getElementById('settings-popup');
-        // Show overlay
-        const overlay = document.getElementById('overlay');
-        overlay.style.display = 'block';
-        // Add event listener to close button
-        const closeButton = document.getElementById('close-button-container');
-        closeButton.addEventListener('click', () => {
-          dialog.remove();
-          overlay.style.display = 'none';
-        });
-        // Add event listener to dark mode toggle
-        const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
-        darkModeCheckbox.addEventListener('change', toggleDarkMode);
-        // Close the popup when clicking outside
-        document.addEventListener('click', function closePopup(event) {
-          if (!dialog.contains(event.target) && event.target !== document.getElementById('settings-button')) {
+          // Add the popup to the document
+          document.body.appendChild(popup.firstElementChild);
+          const dialog = document.getElementById('settings-popup');
+          // Add event listener to close button
+          const closeButton = document.getElementById('close-button-container');
+          closeButton.addEventListener('click', () => {
             dialog.remove();
-            overlay.style.display = 'none';
-            document.removeEventListener('click', closePopup);
+          });
+          // Add event listener to dark mode toggle
+          const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
+          darkModeCheckbox.addEventListener('change', toggleDarkMode);
+        }
+        // Initialize the game
+        GG_ALL_GAME_CONFIG.startingElements.forEach(element => {
+          if (!elementExistsInSidebar(element)) {
+            addToSidebarItems(element);
           }
         });
-      }
-      // Initialize the game
-      GG_ALL_GAME_CONFIG.startingElements.forEach(element => {
-        if (!elementExistsInSidebar(element)) {
-          addToSidebarItems(element);
-        }
-      });
-      // Load dark mode setting from localStorage
-      GG_ALL_GAME_CONFIG.darkMode = localStorage.getItem('darkMode') === 'true';
-      applyDarkMode();
-      // Add event listener for settings button
-      document.getElementById('settings-button').addEventListener('click', showSettingsPopup);
-
-      function applyDarkMode() {
-        if (GG_ALL_GAME_CONFIG.darkMode) {
-          document.body.classList.add('dark-mode');
-        } else {
-          document.body.classList.remove('dark-mode');
-        }
-      }
-
-      function toggleDarkMode() {
-        GG_ALL_GAME_CONFIG.darkMode = !GG_ALL_GAME_CONFIG.darkMode;
-        localStorage.setItem('darkMode', GG_ALL_GAME_CONFIG.darkMode);
+        // Load dark mode setting from localStorage
+        GG_ALL_GAME_CONFIG.darkMode = localStorage.getItem('darkMode') === 'true';
         applyDarkMode();
-      }
-    })();
-  </script>
+        // Add event listener for settings button
+        const settingsButton = document.getElementById('settings-button');
+        settingsButton.addEventListener('click', showSettingsPopup);
+
+        function applyDarkMode() {
+          if (GG_ALL_GAME_CONFIG.darkMode) {
+            document.body.classList.add('dark-mode');
+          } else {
+            document.body.classList.remove('dark-mode');
+          }
+        }
+
+        function toggleDarkMode() {
+          GG_ALL_GAME_CONFIG.darkMode = !GG_ALL_GAME_CONFIG.darkMode;
+          localStorage.setItem('darkMode', GG_ALL_GAME_CONFIG.darkMode);
+          applyDarkMode();
+        }
+      })();
+    </script>
+
+  </div>
 
 </body>
 

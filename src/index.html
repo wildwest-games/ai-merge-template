@@ -12,10 +12,10 @@
 
     :root {
       --background-color: #f0f0f0;
-      --text-color: #000000;
+      --text-color: #000;
       --border-color: #525252;
       --resizer-color: #f0f0f0;
-      --close-button-border-color: #000000;
+      --close-button-border-color: #000;
       --recipe-background-color: #f0f0f0;
       /* sizes */
       --font-size: 16.4px;
@@ -66,7 +66,7 @@
       --close-button-transition: transform 0.1s ease-in-out;
       --close-button-hover-scale: 1.06;
       --crafts-container-max-height: 60vh;
-      --dark-mode-toggle-margin-top: 20px;
+      --dark-theme-toggle-margin-top: 20px;
       --slider-background-color: #ccc;
       --slider-transition: .4s;
       --slider-border-radius: 34px;
@@ -80,7 +80,7 @@
       --element-hover-gradient: linear-gradient(180deg, #fff, #d6fcff 80%);
     }
 
-    .dark-mode {
+    .dark-theme {
       --background-color: #18181b;
       --text-color: #fff;
       --border-color: #525252;
@@ -218,14 +218,14 @@
       background-position: 10px 10px;
     }
 
+    /* Base element styling */
     .element {
+      cursor: pointer;
       border-radius: var(--element-border-radius);
       display: inline-flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
-      cursor: pointer;
-      position: absolute;
       font-size: var(--element-font-size);
       text-align: left;
       box-shadow: var(--element-box-shadow);
@@ -233,6 +233,7 @@
       border: 1px solid var(--border-color);
       padding: var(--element-padding);
       transition: background 0.3s ease;
+      margin: 4px;
     }
 
     .element:hover {
@@ -240,11 +241,28 @@
     }
 
     .element:hover .element-text {
-      color: white;
+      color: var(--text-color);
     }
 
-    .element.merging {
+    /* Board item specific styling */
+    .board-item {
+      position: absolute;
+    }
+
+    .board-item.merging {
       cursor: default;
+    }
+
+    /* Sidebar item specific styling */
+    .sidebar-item {
+      position: static;
+      user-select: none;
+    }
+
+    /* Display item specific styling (for crafts modal) */
+    .display-item {
+      position: static;
+      user-select: none;
     }
 
     #sidebar-items {
@@ -255,14 +273,12 @@
       padding: 9px;
     }
 
-    #sidebar-items .element {
+    .sidebar-item {
       margin: var(--sidebar-items-margin);
-      position: static;
       background-color: var(--background-color);
-      user-select: none;
     }
 
-    .element .emoji {
+    .element-emoji {
       font-size: var(--element-emoji-font-size);
       margin-right: var(--element-emoji-margin-right);
     }
@@ -286,8 +302,6 @@
       pointer-events: none;
     }
 
-    #combinations-header,
-    #settings-header,
     .modal-header {
       position: sticky;
       top: 0;
@@ -301,8 +315,7 @@
       background-color: var(--background-color) user-select: none;
     }
 
-    #combinations-title,
-    #settings-title {
+    .modal-title {
       margin: 0;
       font-size: var(--popup-title-font-size);
       display: flex;
@@ -320,7 +333,8 @@
       margin-right: var(--popup-emoji-margin-right);
     }
 
-    #close-button {
+    /* The main button container */
+    .close-button {
       cursor: pointer;
       border: 1px solid var(--border-color);
       border-radius: var(--element-border-radius);
@@ -329,16 +343,31 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      background-color: var(--button-bg-color);
+      /* Optional background */
     }
 
-    #close-button-image {
-      background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJhIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj48cGF0aCBkPSJNMzAwLjAwMDAyLDM0OS44MzIzM0w2MC4xMDc4Miw1ODkuNzIzMzJjLTYuNTQ2ODksNi41NDc2OS0xNC43NzY0Myw5Ljg5NzE4LTI0LjY4ODYsMTAuMDQ4NTEtOS45MTEzOCwuMTUyMS0xOC4yOTIyNC0zLjE5NzQtMjUuMTQyNTYtMTAuMDQ4NTFDMy40MjU1Nyw1ODIuODcyOTgsLjAwMDAyLDU3NC41Njc4LDAsNTY0LjgwNzc0Yy4wMDAwMi05Ljc2MDA3LDMuNDI1NTctMTguMDY1MjYsMTAuMjc2NjYtMjQuOTE1NTZsMjM5Ljg5MTAxLTIzOS44OTIyTDEwLjI3NjY4LDYwLjEwNzc4QzMuNzI4OTksNTMuNTYwOTIsLjM3OTUsNDUuMzMxMzYsLjIyODE3LDM1LjQxOTIyLC4wNzYwNywyNS41MDc4OCwzLjQyNTU3LDE3LjEyNywxMC4yNzY2OCwxMC4yNzY2NiwxNy4xMjcwMiwzLjQyNTUzLDI1LjQzMjIsMCwzNS4xOTIyNiwwczE4LjA2NTI2LDMuNDI1NTMsMjQuOTE1NTYsMTAuMjc2NjZsMjM5Ljg5MjIsMjM5Ljg5MDk3TDUzOS44OTIyMiwxMC4yNzY1OWM2LjU0Njg2LTYuNTQ3NzIsMTQuNzc2NDMtOS44OTcyLDI0LjY4ODU2LTEwLjA0ODUxLDkuOTExMzQtLjE1MjE3LDE4LjI5MjIyLDMuMTk3MzgsMjUuMTQyNTYsMTAuMDQ4NTEsNi44NTExMyw2Ljg1MDI3LDEwLjI3NjY2LDE1LjE1NTUyLDEwLjI3NjY2LDI0LjkxNTU2cy0zLjQyNTUzLDE4LjA2NTIyLTEwLjI3NjY2LDI0LjkxNTU2bC0yMzkuODkwOTcsMjM5Ljg5MjI3LDIzOS44OTEwNSwyMzkuODkyMmM2LjU0NzcyLDYuNTQ2ODksOS44OTcyLDE0Ljc3NjQzLDEwLjA0ODUxLDI0LjY4ODYsLjE1MjE3LDkuOTExMzgtMy4xOTczOCwxOC4yOTIyNC0xMC4wNDg1MSwyNS4xNDI1Ni02Ljg1MDI3LDYuODUxMS0xNS4xNTU1MiwxMC4yNzY2NC0yNC45MTU1NiwxMC4yNzY2Ni05Ljc2MDA0LS4wMDAwMi0xOC4wNjUyMi0zLjQyNTU3LTI0LjkxNTU2LTEwLjI3NjY2bC0yMzkuODkyMjctMjM5Ljg5MTAxWiIvPjwvc3ZnPg==');
+    /* The inner icon, which is smaller */
+    .close-button-icon {
       width: var(--close-button-img-size);
+      /* Make it smaller than the button */
       height: var(--close-button-img-size);
+      background-color: var(--text-color);
+      /* Change this for different colors */
+      /* Apply SVG as a mask */
+      -webkit-mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj4KICAgIDxwYXRoIGQ9Ik0zMDAuMDAwMDIsMzQ5LjgzMjMzTDYwLjEwNzgyLDU4OS43MjMzMmMtNi41NDY4OSw2LjU0NzY5LTE0Ljc3NjQzLDkuODk3MTgtMjQuNjg4NiwxMC4wNDg1MS05LjkxMTM4LC4xNTIxLTE4LjI5MjI0LTMuMTk3NC0yNS4xNDI1Ni0xMC4wNDg1MUMzLjQyNTU3LDU4Mi44NzI5OCwuMDAwMDIsNTc0LjU2NzgsMCw1NjQuODA3NzRjLjAwMDAyLTkuNzYwMDcsMy40MjU1Ny0xOC4wNjUyNiwxMC4yNzY2Ni0yNC45MTU1NmwyMzkuODkxMDEtMjM5Ljg5MjJMMTAuMjc2NjgsNjAuMTA3NzhDMy43Mjg5OSw1My41NjA5MiwuMzc5NSw0NS4zMzEzNiwuMjI4MTcsMzUuNDE5MjIsLjA3NjA3LDI1LjUwNzg4LDMuNDI1NTcsMTcuMTI3LDEwLjI3NjY4LDEwLjI3NjY2LDE3LjEyNzAyLDMuNDI1NTMsMjUuNDMyMiwwLDM1LjE5MjI2LDBzMTguMDY1MjYsMy40MjU1MywyNC45MTU1NiwxMC4yNzY2NmwyMzkuODkyMiwyMzkuODkwOTdMNTM5Ljg5MjIyLDEwLjI3NjU5YzYuNTQ2ODYtNi41NDc3MiwxNC43NzY0My05Ljg5NzIsMjQuNjg4NTYtMTAuMDQ4NTEsOS45MTEzNC0uMTUyMTcsMTguMjkyMjIsMy4xOTczOCwyNS4xNDI1NiwxMC4wNDg1MSw2Ljg1MTEzLDYuODUwMjcsMTAuMjc2NjYsMTUuMTU1NTIsMTAuMjc2NjYsMjQuOTE1NTZzLTMuNDI1NTMsMTguMDY1MjItMTAuMjc2NjYsMjQuOTE1NTZsLTIzOS44OTA5NywyMzkuODkyMjcsMjM5Ljg5MTA1LDIzOS44OTIyYzYuNTQ3NzIsNi41NDY4OSw5Ljg5NzIsMTQuNzc2NDMsMTAuMDQ4NTEsMjQuNjg4NiwuMTUyMTcsOS45MTEzOC0zLjE5NzM4LDE4LjI5MjI0LTEwLjA0ODUxLDI1LjE0MjU2LTYuODUwMjcsNi44NTExLTE1LjE1NTUyLDEwLjI3NjY0LTI0LjkxNTU2LDEwLjI3NjY2LTkuNzYwMDQtLjAwMDAyLTE4LjA2NTIyLTMuNDI1NTctMjQuOTE1NTYtMTAuMjc2NjZsLTIzOS44OTIyNy0yMzkuODkxMDFaIj48L3BhdGg+IAo8L3N2Zz4=');
+      mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj4KICAgIDxwYXRoIGQ9Ik0zMDAuMDAwMDIsMzQ5LjgzMjMzTDYwLjEwNzgyLDU4OS43MjMzMmMtNi41NDY4OSw2LjU0NzY5LTE0Ljc3NjQzLDkuODk3MTgtMjQuNjg4NiwxMC4wNDg1MS05LjkxMTM4LC4xNTIxLTE4LjI5MjI0LTMuMTk3NC0yNS4xNDI1Ni0xMC4wNDg1MUMzLjQyNTU3LDU4Mi44NzI5OCwuMDAwMDIsNTc0LjU2NzgsMCw1NjQuODA3NzRjLjAwMDAyLTkuNzYwMDcsMy40MjU1Ny0xOC4wNjUyNiwxMC4yNzY2Ni0yNC45MTU1NmwyMzkuODkxMDEtMjM5Ljg5MjJMMTAuMjc2NjgsNjAuMTA3NzhDMy43Mjg5OSw1My41NjA5MiwuMzc5NSw0NS4zMzEzNiwuMjI4MTcsMzUuNDE5MjIsLjA3NjA3LDI1LjUwNzg4LDMuNDI1NTcsMTcuMTI3LDEwLjI3NjY4LDEwLjI3NjY2LDE3LjEyNzAyLDMuNDI1NTMsMjUuNDMyMiwwLDM1LjE5MjI2LDBzMTguMDY1MjYsMy40MjU1MywyNC45MTU1NiwxMC4yNzY2NmwyMzkuODkyMiwyMzkuODkwOTdMNTM5Ljg5MjIyLDEwLjI3NjU5YzYuNTQ2ODYtNi41NDc3MiwxNC43NzY0My05Ljg5NzIsMjQuNjg4NTYtMTAuMDQ4NTEsOS45MTEzNC0uMTUyMTcsMTguMjkyMjIsMy4xOTczOCwyNS4xNDI1NiwxMC4wNDg1MSw2Ljg1MTEzLDYuODUwMjcsMTAuMjc2NjYsMTUuMTU1NTIsMTAuMjc2NjYsMjQuOTE1NTZzLTMuNDI1NTMsMTguMDY1MjItMTAuMjc2NjYsMjQuOTE1NTZsLTIzOS44OTA5NywyMzkuODkyMjcsMjM5Ljg5MTA1LDIzOS44OTIyYzYuNTQ3NzIsNi41NDY4OSw5Ljg5NzIsMTQuNzc2NDMsMTAuMDQ4NTEsMjQuNjg4NiwuMTUyMTcsOS45MTEzOC0zLjE5NzM4LDE4LjI5MjI0LTEwLjA0ODUxLDI1LjE0MjU2LTYuODUwMjcsNi44NTExLTE1LjE1NTUyLDEwLjI3NjY0LTI0LjkxNTU2LDEwLjI3NjY2LTkuNzYwMDQtLjAwMDAyLTE4LjA2NTIyLTMuNDI1NTctMjQuOTE1NTYtMTAuMjc2NjZsLTIzOS44OTIyNy0yMzkuODkxMDFaIj48L3BhdGg+IAo8L3N2Zz4=');
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
       transition: var(--close-button-transition);
     }
 
-    #close-button:hover #close-button-image {
+    /* Hover effect */
+    .close-button:hover .close-button-icon {
       transform: scale(var(--close-button-hover-scale));
     }
 
@@ -358,8 +387,6 @@
     }
 
     .display-item {
-      display: flex;
-      align-items: center;
       font-size: var(--recipe-font-size);
     }
 
@@ -368,10 +395,10 @@
       margin-right: var(--recipe-emoji-margin-right);
     }
 
-    #dark-mode-toggle {
+    #dark-theme-toggle {
       display: inline-flex;
       gap: 10px;
-      margin-top: var(--dark-mode-toggle-margin-top);
+      margin-top: var(--dark-theme-toggle-margin-top);
     }
 
     .switch {
@@ -426,47 +453,47 @@
     <div id="board"></div>
     <div id="resizer"></div>
     <div id="sidebar">
-      <div>
-        <div id="sidebar-header">
-          <div id="sidebar-search-div">
-            <input id="sidebar-search-input" placeholder="Search...">
-          </div>
-          <div id="settings-button-div">
-            <button id="settings-button">
-              <svg id="settings-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="24" height="24">
-                <path d="M244.66614,599.99994c-6.62389,0-12.35028-2.24361-17.17916-6.73083-4.82887-4.48722-7.79889-10.04277-8.90999-16.66666l-9.35916-73.01248c-10.6411-3.20499-22.14749-8.24777-34.51917-15.12832-12.37167-6.88057-22.8953-14.25222-31.57084-22.11499l-66.73082,28.7175c-6.49555,2.90613-12.88443,3.21611-19.16666,.93-6.28167-2.28667-11.2175-6.40001-14.8075-12.34001L3.83286,416.5383c-3.16222-5.93999-4.12361-12.22193-2.88417-18.84582,1.23889-6.62389,4.55083-12.00861,9.93584-16.15417l58.01249-43.65417c-.98278-6.02557-1.79473-12.23279-2.43584-18.62167-.64111-6.38888-.96167-12.5961-.96167-18.62167,0-5.59832,.32056-11.48501,.96167-17.65999,.64111-6.175,1.45306-13.13001,2.43584-20.86499L10.88453,218.46164c-5.38499-4.14551-8.80388-9.53023-10.25666-16.15417-1.45278-6.62389-.38445-12.90583,3.20499-18.84582L42.42286,117.62831c3.59-5.94055,8.41916-10.05386,14.48749-12.33998,6.06834-2.28668,12.35028-1.97698,18.84584,.92916l66.73084,28.07749c9.95722-8.29056,20.72639-15.76914,32.30751-22.43581,11.58109-6.66667,22.84195-11.8164,33.7825-15.44917l10-73.01248c1.11112-6.62384,4.08112-12.17941,8.90999-16.66666,4.8289-4.4872,10.55527-6.73085,17.17913-6.73085h76.92331c6.62445,0,12.45778,2.24365,17.5,6.73085,5.04277,4.48725,8.11976,10.04283,9.23085,16.66666l9.35918,73.65335c12.77776,4.4872,24.07053,9.63694,33.87832,15.44917,9.80774,5.81167,19.90387,13.07668,30.28834,21.79499l69.29499-28.07749c6.49556-2.90614,12.77751-3.3228,18.84582-1.25,6.06832,2.0728,10.89752,6.07915,14.48751,12.01914l38.58998,66.47501c3.58948,5.93999,4.6578,12.22193,3.20501,18.84582-1.45279,6.62389-4.87162,12.00861-10.25665,16.15417l-60.57667,45.57668c1.83777,6.88054,2.86331,13.19471,3.07668,18.94249,.21388,5.74778,.32089,11.42085,.32084,17.01917,.00005,5.17113-.21357,10.63057-.64082,16.37832-.42781,5.74778-1.41088,12.70276-2.94917,20.86499l59.29499,44.29499c5.38442,4.14556,8.80335,9.53028,10.25665,16.15417,1.45279,6.62389,.38442,12.90583-3.20501,18.84582l-38.58998,66.92334c-3.58999,5.94-8.55804,9.9786-14.90417,12.11583-6.34608,2.13665-12.76698,1.75195-19.26249-1.15416l-66.9875-28.71832c-10.38447,8.71834-20.83308,16.19692-31.34582,22.43583-10.51275,6.23945-21.45304,11.17556-32.82084,14.80834l-9.35918,73.65333c-1.11109,6.62389-4.18808,12.17944-9.23085,16.66666-5.04222,4.48722-10.87555,6.73084-17.5,6.73083l-76.92331-.00006Zm5.44917-33.33333h65.19251l12.30748-90.25667c16.79499-4.44445,31.91248-10.54471,45.35247-18.30083,13.43999-7.75668,27.1258-18.38694,41.05748-31.89084l83.14167,35.44835,33.14081-56.66666-72.94916-54.80748c2.77781-9.48723,4.61558-18.21581,5.51336-26.18583,.89717-7.97,1.34588-15.97221,1.34583-24.00668,.00005-8.46163-.44866-16.4639-1.34583-24.00668-.89778-7.54275-2.73554-15.84389-5.51336-24.90333l74.23085-56.08998-33.14081-56.66666-85.06418,35.64081c-10.08555-11.06832-23.34416-21.44221-39.77584-31.12167-16.43168-9.67946-31.97642-16.10031-46.63416-19.26249l-10.19246-90.25664h-66.47414l-10.385,89.61501c-16.79499,3.58999-32.23304,9.36996-46.31416,17.33998-14.08111,7.96997-28.08749,18.92085-42.01917,32.85247l-83.14083-34.80748-33.14083,56.66666,72.30749,53.97415c-2.77779,7.47889-4.72221,15.5986-5.83333,24.35918-1.11112,8.76058-1.66667,17.86306-1.66667,27.30751,0,8.46166,.55555,16.85915,1.66667,25.19249,1.11112,8.33333,2.84192,16.45304,5.19249,24.35915l-71.66666,54.8075,33.14084,56.66666,82.49999-35c13.07665,13.20501,26.6558,23.79249,40.7375,31.76249,14.08111,7.97055,29.94639,14.17803,47.59582,18.62249l10.83333,89.61501Zm32.43583-183.33331c23.24775,0,42.94863-8.07696,59.1025-24.23083,16.15392-16.15389,24.23085-35.85472,24.23085-59.1025s-8.07693-42.9486-24.23085-59.10247c-16.15387-16.15392-35.85474-24.23085-59.1025-24.23085-23.37611,0-43.10915,8.07693-59.19916,24.23085-16.08945,16.15392-24.13416,35.85472-24.13416,59.1025s8.04471,42.9486,24.13416,59.1025c16.09001,16.15389,35.82306,24.2308,59.19916,24.2308Z"></path>
-              </svg>
-            </button>
-          </div>
+      <div id="sidebar-header">
+        <div id="sidebar-search-div">
+          <input id="sidebar-search-input" placeholder="Search...">
         </div>
-        <div id="sidebar-items-content">
-          <div id="sidebar-items-header">
-          </div>
-          <div id="sidebar-items">
-          </div>
+        <div id="settings-button-div">
+          <button id="settings-button">
+            <svg id="settings-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="24" height="24">
+              <path d="M244.66614,599.99994c-6.62389,0-12.35028-2.24361-17.17916-6.73083-4.82887-4.48722-7.79889-10.04277-8.90999-16.66666l-9.35916-73.01248c-10.6411-3.20499-22.14749-8.24777-34.51917-15.12832-12.37167-6.88057-22.8953-14.25222-31.57084-22.11499l-66.73082,28.7175c-6.49555,2.90613-12.88443,3.21611-19.16666,.93-6.28167-2.28667-11.2175-6.40001-14.8075-12.34001L3.83286,416.5383c-3.16222-5.93999-4.12361-12.22193-2.88417-18.84582,1.23889-6.62389,4.55083-12.00861,9.93584-16.15417l58.01249-43.65417c-.98278-6.02557-1.79473-12.23279-2.43584-18.62167-.64111-6.38888-.96167-12.5961-.96167-18.62167,0-5.59832,.32056-11.48501,.96167-17.65999,.64111-6.175,1.45306-13.13001,2.43584-20.86499L10.88453,218.46164c-5.38499-4.14551-8.80388-9.53023-10.25666-16.15417-1.45278-6.62389-.38445-12.90583,3.20499-18.84582L42.42286,117.62831c3.59-5.94055,8.41916-10.05386,14.48749-12.33998,6.06834-2.28668,12.35028-1.97698,18.84584,.92916l66.73084,28.07749c9.95722-8.29056,20.72639-15.76914,32.30751-22.43581,11.58109-6.66667,22.84195-11.8164,33.7825-15.44917l10-73.01248c1.11112-6.62384,4.08112-12.17941,8.90999-16.66666,4.8289-4.4872,10.55527-6.73085,17.17913-6.73085h76.92331c6.62445,0,12.45778,2.24365,17.5,6.73085,5.04277,4.48725,8.11976,10.04283,9.23085,16.66666l9.35918,73.65335c12.77776,4.4872,24.07053,9.63694,33.87832,15.44917,9.80774,5.81167,19.90387,13.07668,30.28834,21.79499l69.29499-28.07749c6.49556-2.90614,12.77751-3.3228,18.84582-1.25,6.06832,2.0728,10.89752,6.07915,14.48751,12.01914l38.58998,66.47501c3.58948,5.93999,4.6578,12.22193,3.20501,18.84582-1.45279,6.62389-4.87162,12.00861-10.25665,16.15417l-60.57667,45.57668c1.83777,6.88054,2.86331,13.19471,3.07668,18.94249,.21388,5.74778,.32089,11.42085,.32084,17.01917,.00005,5.17113-.21357,10.63057-.64082,16.37832-.42781,5.74778-1.41088,12.70276-2.94917,20.86499l59.29499,44.29499c5.38442,4.14556,8.80335,9.53028,10.25665,16.15417,1.45279,6.62389,.38442,12.90583-3.20501,18.84582l-38.58998,66.92334c-3.58999,5.94-8.55804,9.9786-14.90417,12.11583-6.34608,2.13665-12.76698,1.75195-19.26249-1.15416l-66.9875-28.71832c-10.38447,8.71834-20.83308,16.19692-31.34582,22.43583-10.51275,6.23945-21.45304,11.17556-32.82084,14.80834l-9.35918,73.65333c-1.11109,6.62389-4.18808,12.17944-9.23085,16.66666-5.04222,4.48722-10.87555,6.73084-17.5,6.73083l-76.92331-.00006Zm5.44917-33.33333h65.19251l12.30748-90.25667c16.79499-4.44445,31.91248-10.54471,45.35247-18.30083,13.43999-7.75668,27.1258-18.38694,41.05748-31.89084l83.14167,35.44835,33.14081-56.66666-72.94916-54.80748c2.77781-9.48723,4.61558-18.21581,5.51336-26.18583,.89717-7.97,1.34588-15.97221,1.34583-24.00668,.00005-8.46163-.44866-16.4639-1.34583-24.00668-.89778-7.54275-2.73554-15.84389-5.51336-24.90333l74.23085-56.08998-33.14081-56.66666-85.06418,35.64081c-10.08555-11.06832-23.34416-21.44221-39.77584-31.12167-16.43168-9.67946-31.97642-16.10031-46.63416-19.26249l-10.19246-90.25664h-66.47414l-10.385,89.61501c-16.79499,3.58999-32.23304,9.36996-46.31416,17.33998-14.08111,7.96997-28.08749,18.92085-42.01917,32.85247l-83.14083-34.80748-33.14083,56.66666,72.30749,53.97415c-2.77779,7.47889-4.72221,15.5986-5.83333,24.35918-1.11112,8.76058-1.66667,17.86306-1.66667,27.30751,0,8.46166,.55555,16.85915,1.66667,25.19249,1.11112,8.33333,2.84192,16.45304,5.19249,24.35915l-71.66666,54.8075,33.14084,56.66666,82.49999-35c13.07665,13.20501,26.6558,23.79249,40.7375,31.76249,14.08111,7.97055,29.94639,14.17803,47.59582,18.62249l10.83333,89.61501Zm32.43583-183.33331c23.24775,0,42.94863-8.07696,59.1025-24.23083,16.15392-16.15389,24.23085-35.85472,24.23085-59.1025s-8.07693-42.9486-24.23085-59.10247c-16.15387-16.15392-35.85474-24.23085-59.1025-24.23085-23.37611,0-43.10915,8.07693-59.19916,24.23085-16.08945,16.15392-24.13416,35.85472-24.13416,59.1025s8.04471,42.9486,24.13416,59.1025c16.09001,16.15389,35.82306,24.2308,59.19916,24.2308Z"></path>
+            </svg>
+          </button>
         </div>
       </div>
+      <div id="sidebar-items"> </div>
     </div>
     <dialog id="settings-modal" class="modal">
       <div id="settings-header" class="modal-header">
-        <h1 id="settings-title">Settings</h1>
+        <h1 id="settings-title" class="modal-title">Settings</h1>
         <div class="close-button">
-          <div class="close-button-image" alt="Close">
-          </div>
+          <div class="close-button-icon"></div>
         </div>
-
       </div>
       <div class="settings-container">
         <div>
-          <div id="dark-mode-toggle">
+          <div id="dark-theme-toggle">
             <span class="settings-label">Dark Mode</span>
             <label class="switch">
-              <input id="dark-mode-checkbox" type="checkbox">
+              <input id="dark-theme-checkbox" type="checkbox">
               <span class="slider"></span>
             </label>
           </div>
         </div>
       </div>
+    </dialog>
+    <dialog id="crafts-modal" class="modal">
+      <div id="crafts-header" class="modal-header">
+        <h1 id="crafts-title" class="modal-title">Crafts</h1>
+        <div class="close-button">
+          <div class="close-button-icon"></div>
+        </div>
+      </div>
+      <div id="crafts-container"></div>
     </dialog>
   </div>
   <script>
@@ -476,6 +503,15 @@
       });
       const GG_ALL_GAME_CONFIG = {
         initialElements: ['Earth', 'Water', 'Wind', 'Fire'], // Initial elements
+        initialEmojis: {
+          'Earth': '🌎',
+          'Water': '💧',
+          'Wind': '💨',
+          'Fire': '🔥'
+        },
+        initialSettings: {
+          'theme': 'dark-theme'
+        }, // Initial settings
         sidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width')), // Initial width of the sidebar
         minSidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-sidebar-width')), // Minimum width of the sidebar
         maxSidebarWidth: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-sidebar-width')), // Maximum width of the sidebar
@@ -521,9 +557,9 @@
       let draggedElement = null;
       let offsetX, offsetY;
 
-      function createElementDiv(name, targetX = 0, targetY = 0) {
+      function createElementDiv(name, elementType = 'board-item', targetX = 0, targetY = 0) {
         const element = document.createElement('div');
-        element.className = 'element';
+        element.className = `element ${elementType}`;
         element.style.left = `${targetX}px`;
         element.style.top = `${targetY}px`;
         element.draggable = true;
@@ -536,10 +572,10 @@
           showCombinations.call(this, e);
         });
         const emojiSpan = document.createElement('span');
-        emojiSpan.className = 'emoji';
+        emojiSpan.className = `element-emoji ${elementType}-emoji`;
         element.appendChild(emojiSpan);
         const textSpan = document.createElement('span');
-        textSpan.className = 'element-text';
+        textSpan.className = `element-text ${elementType}-text`;
         textSpan.textContent = titleCase(name);
         element.appendChild(textSpan);
         element.dataset.name = name; // Store the name in a data attribute
@@ -593,7 +629,7 @@
       }
 
       function addToSidebarItems(name) {
-        const element = createElementDiv(name);
+        const element = createElementDiv(name, 'sidebar-item', 0, 0);
         sidebarItems.appendChild(element);
       }
 
@@ -617,7 +653,7 @@
           target.style.left = `${targetX}px`;
           target.style.top = `${targetY}px`;
           if (target.parentElement === sidebarItems) {
-            draggedElement = createElementDiv(target.dataset.name, targetX, targetY);
+            draggedElement = createElementDiv(target.dataset.name, 'board-item', targetX, targetY);
           } else {
             draggedElement = target;
           }
@@ -700,49 +736,36 @@
       });
 
       function showCombinations(e) {
+        const dialog = document.getElementById('crafts-modal');
         const elementName = this.dataset.name;
         const combinations = findCombinations(elementName);
-        // Remove existing popup if any
-        const existingPopup = document.getElementById('combinations-popup');
-        if (existingPopup) {
-          existingPopup.remove();
-        }
-        // Create and show the popup
-        const popup = document.createElement('div');
-        popup.innerHTML = `
-<dialog id="combinations-popup" open>
-<div id="combinations-header">
-<h1 id="combinations-title"><span class="display-item-emoji">${gameState.emojis[elementName] || '⬜'}</span> ${elementName}</h1>
-<div id="close-button-container">
-<img src="${GG_ALL_GAME_CONFIG.closeButtonImage}" id="close-button" alt="Close">
-</div>
-</div>
-<div class="crafts-container">
-${combinations.map(combo => `
+        document.getElementById('crafts-title').innerHTML = `<span class="element-emoji display-emoji-text">${gameState.emojis[elementName] || '⬜'}</span> ${elementName}</h1>`;
+        document.getElementById('crafts-container').innerHTML = `${combinations.map(combo => `
 <div class="recipe">
-<div class="display-item">
-<span class="display-item-emoji">${gameState.emojis[combo[0]] || '⬜'}</span> ${combo[0]}
+<div class="element display-item">
+<span class="element-emoji">${gameState.emojis[combo[0]] || '⬜'}</span>
+<span class="element-text">${combo[0]}</span>
 </div>
 +
-<div class="display-item">
-<span class="display-item-emoji">${gameState.emojis[combo[1]] || '⬜'}</span> ${combo[1]}
+<div class="element display-item">
+<span class="element-emoji">${gameState.emojis[combo[1]] || '��'}</span>
+<span class="element-text">${combo[1]}</span>
 </div>
 =
-<div class="display-item">
-<span class="display-item-emoji">${gameState.emojis[elementName] || '⬜'}</span> ${elementName}
+<div class="element display-item">
+<span class="element-emoji">${gameState.emojis[elementName] || '⬜'}</span>
+<span class="element-text">${elementName}</span>
 </div>
 </div>
 `).join('')}
 </div>
-</dialog>
 `;
-        // Add the popup to the document
-        document.body.appendChild(popup.firstElementChild);
-        const dialog = document.getElementById('combinations-popup');
+        // Show the dialog
+        dialog.showModal();
         // Add event listener to close button
-        const closeButton = document.getElementById('close-button-container');
+        const closeButton = document.querySelector('#crafts-header > div.close-button');
         closeButton.addEventListener('click', () => {
-          dialog.remove();
+          dialog.close();
         });
       }
 
@@ -819,6 +842,8 @@ ${combinations.map(combo => `
                 board.removeChild(element2);
                 // Store the combination
                 gameState.combinations[combinationKey] = newElement;
+                gameState.recipes
+                saveData();
               }, 1000);
             })
             .catch(error => {
@@ -831,7 +856,7 @@ ${combinations.map(combo => `
       }
 
       function createNewElement(name, x, y) {
-        const newElement = createElementDiv(name);
+        const newElement = createElementDiv(name, 'board-item');
         newElement.style.left = `${x}px`;
         newElement.style.top = `${y}px`;
         board.appendChild(newElement);
@@ -862,16 +887,18 @@ ${combinations.map(combo => `
           dialog.close();
         });
         // Add event listener to dark mode toggle
-        const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
-        darkModeCheckbox.addEventListener('change', applyTheme);
+        const darkModeCheckbox = document.getElementById('dark-theme-checkbox');
+        darkModeCheckbox.addEventListener('change', () => {
+          gameState.settings.theme = document.getElementById('dark-theme-checkbox').checked ? 'dark-theme' : '';
+          applyTheme();
+        });
       }
       // Add event listener for settings button
       document.getElementById('settings-button').addEventListener('click', showSettingsModal);
 
       function applyTheme() {
-        const theme = document.getElementById('dark-mode-checkbox').checked ? 'dark-mode' : '';
-        gameState.settings.theme = theme;
-        document.body.className = theme;
+        document.body.className = gameState.settings.theme;
+        document.getElementById('dark-theme-checkbox').checked = (gameState.settings.theme === 'dark-theme');
         saveData();
       }
 
@@ -883,14 +910,12 @@ ${combinations.map(combo => `
         gameState = {
           elements: [...GG_ALL_GAME_CONFIG.initialElements],
           combinations: {},
+          recipes: {},
           emojis: {
-            'Earth': '🌎',
-            'Water': '💧',
-            'Wind': '💨',
-            'Fire': '🔥'
+            ...GG_ALL_GAME_CONFIG.initialEmojis
           },
           settings: {
-            'theme': 'dark-mode'
+            ...GG_ALL_GAME_CONFIG.initialSettings
           }
         }
         saveData();
@@ -899,7 +924,16 @@ ${combinations.map(combo => `
       function loadData() {
         let data = localStorage.getItem('infinite-merge-data');
         if (data) {
-          gameState = JSON.parse(data)
+          gameState = JSON.parse(data);
+          if (!gameState.elements) gameState.elements = [...GG_ALL_GAME_CONFIG.initialElements];
+          if (!gameState.combinations) gameState.combinations = {};
+          if (!gameState.recipes) gameState.recipes = {};
+          if (!gameState.emojis) gameState.emojis = {
+            ...GG_ALL_GAME_CONFIG.initialEmojis
+          };
+          if (!gameState.settings) gameState.settings = {
+            ...GG_ALL_GAME_CONFIG.initialSettings
+          };
         } else {
           resetData()
         }
